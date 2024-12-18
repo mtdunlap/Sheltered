@@ -1,0 +1,54 @@
+{
+  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+  "editor.detectIndentation": true,
+  "editor.insertSpaces": true,
+  "editor.rulers": [
+    120
+  ],
+  "files.eol": "auto",
+  "files.encoding": "utf8",
+  "omnisharp.organizeImportsOnFormat": true,
+  "omnisharp.useEditorFormattingSettings": true,
+  "[csharp]": {
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.formatOnSave": true,
+    "editor.maxTokenizationLineLength": 2500,
+    "editor.tabSize": 4,
+    "editor.trimAutoWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+  },
+  "[css]": {
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    },
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "editor.wordWrap": "on"
+  },
+  "[razor]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.trimAutoWhitespace": true,
+    "files.trimTrailingWhitespace": true,
+  },
+  "[xml]": {
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  }
+}
