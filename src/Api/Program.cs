@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Api.Animals;
 using Api.Configuration.Databases;
-using Data.Sheltered;
+using Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
