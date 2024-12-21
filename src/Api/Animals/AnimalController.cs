@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Client.Animals;
-using Data.Sheltered;
-using Data.Sheltered.Animals;
+using Data;
+using Data.Animals;
 
 namespace Api.Animals;
 

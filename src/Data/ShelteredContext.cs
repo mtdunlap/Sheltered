@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Data.Sheltered.Animals;
+using Data.Animals;
 
-namespace Data.Sheltered;
+namespace Data;
 
 /// <summary>
 /// Represents a session with the sheltered database.
