@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Api.Animals;
+using Api.Configuration.Databases;
+using Data.Sheltered;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+var databaseOptions = builder.Configuration.GetDatabaseSettings();
+builder.Services.AddDatabase<ShelteredContext>(databaseOptions);
+builder.Services.AddScoped<IAnimalMapper, AnimalMapper>();
 
 var app = builder.Build();
 
