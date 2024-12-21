@@ -9,4 +9,8 @@
     <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+
 </Project>
