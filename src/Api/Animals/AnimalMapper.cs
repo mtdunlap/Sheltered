@@ -1,6 +1,5 @@
-using System;
 using Client.Animals;
-using Data.Sheltered.Animals;
+using Data.Animals;
 
 namespace Api.Animals;
 

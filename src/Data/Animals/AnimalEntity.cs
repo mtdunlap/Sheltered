@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Core.Animals;
 
-namespace Data.Sheltered.Animals;
+namespace Data.Animals;
 
 /// <summary>
 /// Represents an entity for an animal.
