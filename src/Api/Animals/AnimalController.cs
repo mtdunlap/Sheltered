@@ -14,11 +14,11 @@ namespace Api.Animals;
 /// <summary>
 /// Represents a collection of endpoints for creating, reading, updating, or deleting information about animals.
 /// </summary>
-/// <param name="shelteredRepository">An <see cref="IShelteredRepository"/> to access the sheltered database.</param>
+/// <param name="repository">An <see cref="IRepository{ShelteredContext}"/> to access the sheltered database.</param>
 /// <param name="animalMapper">An <see cref="IAnimalMapper"/> to map between <see cref="AnimalModel"/>s and <see cref="AnimalEntity"/>s.</param>
 [ApiController]
 [Route("[controller]")]
-public sealed class AnimalController(IShelteredRepository shelteredRepository, IAnimalMapper animalMapper) : ControllerBase
+public sealed class AnimalController(IRepository<ShelteredContext> repository, IAnimalMapper animalMapper) : ControllerBase
 {
     /// <summary>
     /// Determines if an animal with the provided id exists.
@@ -34,7 +34,7 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Head([FromRoute, Description("The id of the animal.")] Guid id, CancellationToken cancellationToken = default)
     {
-        return await shelteredRepository.AnimalExistsByIdAsync(id, cancellationToken) ? NoContent() : NotFound();
+        return await repository.ExistsByIdAsync<AnimalEntity>(id, cancellationToken) ? NoContent() : NotFound();
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get([FromRoute, Description("The id of the animal.")] Guid id, CancellationToken cancellationToken = default)
     {
-        var animalEntity = await shelteredRepository.GetAnimalByIdAsync(id, cancellationToken);
+        var animalEntity = await repository.GetByIdAsync<AnimalEntity>(id, cancellationToken);
         if (animalEntity is null)
         {
             return NotFound();
@@ -74,9 +74,9 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     public async Task<IActionResult> Post([FromBody, Description("The animal to create.")] AnimalModel animalModel, CancellationToken cancellationToken = default)
     {
         var animalEntity = animalMapper.Create(animalModel);
-        await shelteredRepository.AddAnimalAsync(animalEntity, cancellationToken);
-        await shelteredRepository.SaveChangesAsync(cancellationToken);
-        var createdEntity = await shelteredRepository.GetAnimalByIdAsync(animalEntity.Id, cancellationToken) ?? throw new InvalidOperationException();
+        await repository.AddAsync(animalEntity, cancellationToken);
+        await repository.SaveChangesAsync(cancellationToken);
+        var createdEntity = await repository.GetByIdAsync<AnimalEntity>(animalEntity.Id, cancellationToken) ?? throw new InvalidOperationException();
         var createdModel = animalMapper.Map(createdEntity);
         return CreatedAtAction(nameof(Get), new { id = animalEntity.Id.ToString() }, createdModel);
     }
@@ -96,14 +96,14 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Put([FromRoute, Description("The id of the animal.")] Guid id, [FromBody, Description("The updated animal.")] AnimalModel animalModel, CancellationToken cancellationToken = default)
     {
-        var animalEntity = await shelteredRepository.GetAnimalByIdAsync(id, cancellationToken);
+        var animalEntity = await repository.GetByIdAsync<AnimalEntity>(id, cancellationToken);
         if (animalEntity is null)
         {
             return NotFound();
         }
         animalMapper.Update(animalEntity, animalModel);
-        shelteredRepository.UpdateAnimal(animalEntity);
-        await shelteredRepository.SaveChangesAsync(cancellationToken);
+        repository.Update(animalEntity);
+        await repository.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
 
@@ -121,13 +121,13 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete([FromRoute, Description("The id of the animal.")] Guid id, CancellationToken cancellationToken = default)
     {
-        var animalEntity = await shelteredRepository.GetAnimalByIdAsync(id, cancellationToken);
+        var animalEntity = await repository.GetByIdAsync<AnimalEntity>(id, cancellationToken);
         if (animalEntity is null)
         {
             return NotFound();
         }
-        shelteredRepository.RemoveAnimal(animalEntity);
-        await shelteredRepository.SaveChangesAsync(cancellationToken);
+        repository.Remove(animalEntity);
+        await repository.SaveChangesAsync(cancellationToken);
         return NoContent();
     }
 }

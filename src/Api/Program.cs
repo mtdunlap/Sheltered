@@ -15,7 +15,7 @@ builder.Services.AddOpenApi();
 
 var databaseOptions = builder.Configuration.GetDatabaseSettings();
 builder.Services.AddDatabase<ShelteredContext>(databaseOptions);
-builder.Services.AddScoped<IShelteredRepository, ShelteredRepository>();
+builder.Services.AddScoped<IRepository<ShelteredContext>, Repository<ShelteredContext>>();
 builder.Services.AddScoped<IAnimalMapper, AnimalMapper>();
 
 var app = builder.Build();

@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Core.Animals;
@@ -9,14 +8,9 @@ namespace Data.Animals;
 /// Represents an entity for an animal.
 /// </summary>
 [Table("animals", Schema = "sheltered")]
-public sealed record class AnimalEntity
+public sealed record class AnimalEntity : Entity, IEntity<AnimalEntity>
 {
-    /// <summary>
-    /// Gets or inits the id of the animal.
-    /// </summary>
-    /// <value>The id of the animal.</value>
-    [Column("id", TypeName = "TEXT"), Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; private init; } = Guid.Empty;
+    public static AnimalEntity None { get; } = new AnimalEntity { Name = null, Kind = AnimalKind.Unspecified };
 
     /// <summary>
     /// Gets or sets the name of the animal. May be null.
