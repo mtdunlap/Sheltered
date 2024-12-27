@@ -13,16 +13,15 @@ namespace Api.Configuration.Databases;
 /// </summary>
 public static class DatabaseExtensions
 {
+    /// <summary>
+    /// Adds the databases to the <see cref="WebApplicationBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/>.</param>
+    /// <returns>The same <see cref="WebApplicationBuilder"/>.</returns>
     public static WebApplicationBuilder AddDatabases(this WebApplicationBuilder builder)
     {
-        builder.AddDatabase<ShelteredContext>();
-        return builder;
-    }
-
-    public static WebApplicationBuilder AddDatabase<TContext>(this WebApplicationBuilder builder) where TContext : DbContext
-    {
         var databaseOptions = builder.Configuration.GetDatabaseSettings();
-        builder.Services.AddDatabase<TContext>(databaseOptions);
+        builder.Services.AddDatabase<ShelteredContext>(databaseOptions);
         return builder;
     }
 
