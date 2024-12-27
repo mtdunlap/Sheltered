@@ -16,5 +16,9 @@ public sealed record class DatabaseSettings
     /// <value>The data source.</value>
     public required string DataSource { get; init; }
 
-    public required DatabaseProvider Provider { get; init; }
+    /// <summary>
+    /// Gets or inits the <see cref="DatabaseProvider"/>.
+    /// </summary>
+    /// <value>The database provider.</value>
+    public DatabaseProvider Provider { get; init; } = DatabaseProvider.SQLite;
 }
