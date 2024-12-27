@@ -10,6 +10,11 @@ namespace Api.Configuration.Services;
 /// </summary>
 public static class ServiceExtensions
 {
+    /// <summary>
+    /// Adds the required services to the <see cref="WebApplicationBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/>.</param>
+    /// <returns>The same <see cref="WebApplicationBuilder"/>.</returns>
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddScopedServices();
