@@ -5,6 +5,8 @@
 
 #sqlite databases
 *.db
+*.db-shm
+*.db-wal
 
 # dotenv files
 .env
