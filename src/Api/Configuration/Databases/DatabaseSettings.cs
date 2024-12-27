@@ -15,4 +15,6 @@ public sealed record class DatabaseSettings
     /// </summary>
     /// <value>The data source.</value>
     public required string DataSource { get; init; }
+
+    public required DatabaseProvider Provider { get; init; }
 }
