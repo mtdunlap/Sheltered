@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,31 @@ namespace Api.Configuration.Databases;
 /// </summary>
 public static class DatabaseExtensions
 {
+    /// <summary>
+    /// Asynchronously ensures all the databases registered to <see cref="WebApplication"/> is created.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/>.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>true if all of the databases are created; otherwise false.</returns>
+    public static async Task<bool> EnsureDatabasesCreatedAsync(this WebApplication app, CancellationToken cancellationToken = default)
+    {
+        return await app.EnsureDatabaseCreatedAsync<ShelteredContext>(cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously ensures the database for <typeparamref name="TContext"/> registered to <see cref="WebApplication"/> is created.
+    /// </summary>
+    /// <typeparam name="TContext">The <typeparamref name="TContext"/> for which the database will be created.</typeparam>
+    /// <param name="app">The <see cref="WebApplication"/>.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>true if the database for <typeparamref name="TContext"/> is created; otherwise false.</returns>
+    public static async Task<bool> EnsureDatabaseCreatedAsync<TContext>(this WebApplication app, CancellationToken cancellationToken = default) where TContext : DbContext
+    {
+        await using var scope = app.Services.CreateAsyncScope();
+        await using var context = scope.ServiceProvider.GetRequiredService<TContext>();
+        return await context.Database.EnsureCreatedAsync(cancellationToken);
+    }
+
     /// <summary>
     /// Adds the databases to the <see cref="WebApplicationBuilder"/>.
     /// </summary>
@@ -48,7 +75,7 @@ public static class DatabaseExtensions
     public static IServiceCollection AddDatabase<TContext>(this IServiceCollection services, DatabaseSettings databaseSettings) where TContext : DbContext => databaseSettings.Provider switch
     {
         DatabaseProvider.SQLite => services.AddSqliteDatabase<TContext>(databaseSettings),
-        _ => throw new InvalidOperationException()
+        _ => throw new InvalidOperationException($"The provided {databaseSettings.Provider} is unknown or not supported. Please check the appSettings.[Environment].json file.")
     };
 
     /// <summary>
