@@ -27,9 +27,9 @@ internal sealed class AnimalControllerFixture
         var id = Guid.NewGuid();
         var cancellationToken = CancellationTokenSource.Token;
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .AnimalExistsByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .ExistsByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .Returns(false);
 
         var animalMapper = Substitute.For<IAnimalMapper>();
@@ -44,7 +44,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).AnimalExistsByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).ExistsByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(0).Items);
         });
@@ -57,9 +57,9 @@ internal sealed class AnimalControllerFixture
         var id = Guid.NewGuid();
         var cancellationToken = CancellationTokenSource.Token;
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .AnimalExistsByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .ExistsByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .Returns(true);
 
         var animalMapper = Substitute.For<IAnimalMapper>();
@@ -74,7 +74,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).AnimalExistsByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).ExistsByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(0).Items);
         });
@@ -87,9 +87,9 @@ internal sealed class AnimalControllerFixture
         var id = Guid.NewGuid();
         var cancellationToken = CancellationTokenSource.Token;
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .ReturnsNull();
 
         var animalMapper = Substitute.For<IAnimalMapper>();
@@ -104,7 +104,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(0).Items);
         });
@@ -122,9 +122,9 @@ internal sealed class AnimalControllerFixture
             Name = "Lucy",
             Kind = AnimalKind.Cat
         };
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .Returns(animalEntity);
 
         var animalModel = new AnimalModel
@@ -148,7 +148,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
@@ -179,9 +179,9 @@ internal sealed class AnimalControllerFixture
             .Create(Arg.Is(animalModel))
             .Returns(animalEntity);
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .AddAnimalAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken))
+            .AddAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken))
             .Returns(Task.CompletedTask);
 
         shelteredRepository
@@ -194,7 +194,7 @@ internal sealed class AnimalControllerFixture
             Kind = AnimalKind.Cat
         };
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
             .ReturnsNull();
 
         var animalController = new AnimalController(shelteredRepository, animalMapper);
@@ -208,7 +208,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(3).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).AddAnimalAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).AddAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(() =>
             {
@@ -216,7 +216,7 @@ internal sealed class AnimalControllerFixture
             }, Throws.Nothing);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
@@ -247,9 +247,9 @@ internal sealed class AnimalControllerFixture
             .Create(Arg.Is(animalModel))
             .Returns(animalEntity);
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .AddAnimalAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken))
+            .AddAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken))
             .Returns(Task.CompletedTask);
 
         shelteredRepository
@@ -262,7 +262,7 @@ internal sealed class AnimalControllerFixture
             Kind = AnimalKind.Cat
         };
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
             .Returns(animalEntity);
 
         var createdModel = new AnimalModel
@@ -285,17 +285,17 @@ internal sealed class AnimalControllerFixture
             Assert.That((actual as CreatedAtActionResult)?.ActionName, Is.Not.Null.And.EqualTo(nameof(AnimalController.Get)));
             Assert.That((actual as CreatedAtActionResult)?.RouteValues, Is.Not.Null.And.ContainKey("id"));
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(3).Items);
-            Assert.That(() =>
+            Assert.That(async () =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).AddAnimalAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken));
+                await shelteredRepository.Received(Quantity.Exactly(1)).AddAsync(Arg.Is(animalEntity), Arg.Is(cancellationToken));
             }, Throws.Nothing);
-            Assert.That(() =>
+            Assert.That(async () =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).SaveChangesAsync(Arg.Is(cancellationToken));
+                await shelteredRepository.Received(Quantity.Exactly(1)).SaveChangesAsync(Arg.Is(cancellationToken));
             }, Throws.Nothing);
-            Assert.That(() =>
+            Assert.That(async () =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken));
+                _ = await shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(2).Items);
             Assert.That(() =>
@@ -321,9 +321,9 @@ internal sealed class AnimalControllerFixture
         };
         var cancellationToken = CancellationTokenSource.Token;
 
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .ReturnsNull();
 
         var animalMapper = Substitute.For<IAnimalMapper>();
@@ -338,7 +338,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(0).Items);
         });
@@ -361,9 +361,9 @@ internal sealed class AnimalControllerFixture
             Name = "Lucy",
             Kind = AnimalKind.Cat
         };
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .Returns(animalEntity);
 
         shelteredRepository
@@ -382,11 +382,11 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(3).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(() =>
             {
-                shelteredRepository.Received(Quantity.Exactly(1)).UpdateAnimal(Arg.Is(animalEntity));
+                shelteredRepository.Received(Quantity.Exactly(1)).Update(Arg.Is(animalEntity));
             }, Throws.Nothing);
             Assert.That(() =>
             {
@@ -412,9 +412,9 @@ internal sealed class AnimalControllerFixture
             Name = "Lucy",
             Kind = AnimalKind.Cat
         };
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .ReturnsNull();
 
         var animalMapper = Substitute.For<IAnimalMapper>();
@@ -429,7 +429,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(0).Items);
         });
@@ -447,9 +447,9 @@ internal sealed class AnimalControllerFixture
             Name = "Lucy",
             Kind = AnimalKind.Cat
         };
-        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        var shelteredRepository = Substitute.For<IRepository<ShelteredContext>>();
         shelteredRepository
-            .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken))
+            .GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken))
             .Returns(animalEntity);
 
         shelteredRepository
@@ -468,11 +468,11 @@ internal sealed class AnimalControllerFixture
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(3).Items);
             Assert.That(() =>
             {
-                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).GetByIdAsync<AnimalEntity>(Arg.Is(id), Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(() =>
             {
-                shelteredRepository.Received(Quantity.Exactly(1)).RemoveAnimal(Arg.Is(animalEntity));
+                shelteredRepository.Received(Quantity.Exactly(1)).Remove(Arg.Is(animalEntity));
             }, Throws.Nothing);
             Assert.That(() =>
             {

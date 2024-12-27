@@ -10,6 +10,7 @@ namespace Data.Animals;
 [Table("animals", Schema = "sheltered")]
 public sealed record class AnimalEntity : Entity, IEntity<AnimalEntity>
 {
+    /// <inheritdoc/>
     public static AnimalEntity None { get; } = new AnimalEntity { Name = null, Kind = AnimalKind.Unspecified };
 
     /// <summary>

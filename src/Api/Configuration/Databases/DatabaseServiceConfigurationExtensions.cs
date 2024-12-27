@@ -1,4 +1,7 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,5 +42,22 @@ public static class DatabaseServiceConfigurationExtensions
         var databaseSection = configurationManager.GetSection(DatabaseSettings.Key);
         return databaseSection.Get<DatabaseSettings>()
             ?? throw new InvalidOperationException("The database settings are missing or malformed. Please check the appSettings.[Environment].json file.");
+    }
+
+    /// <summary>
+    /// Ensures the database is created and migrated to the latest version.
+    /// If the database already exists all data will be deleted. If the database does not exist it will be created.
+    /// </summary>
+    /// <typeparam name="TContext">The <see cref="DbContext"/> type responsible for interacting with the database.</typeparam>
+    /// <param name="webApplication">The web application used to configure the HTTP pipeline, and routes.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    public static async Task EnsureDeletedAndMigrateAsync<TContext>(this WebApplication webApplication, CancellationToken cancellationToken = default) where TContext : DbContext
+    {
+        await using var scope = webApplication.Services.CreateAsyncScope();
+        await using var context = scope.ServiceProvider.GetRequiredService<TContext>();
+        await context.Database.EnsureCreatedAsync(cancellationToken);
+        await context.Database.EnsureDeletedAsync(cancellationToken);
+        await context.Database.MigrateAsync(cancellationToken);
     }
 }

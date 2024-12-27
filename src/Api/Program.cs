@@ -19,6 +19,7 @@ builder.Services.AddScoped<IRepository<ShelteredContext>, Repository<ShelteredCo
 builder.Services.AddScoped<IAnimalMapper, AnimalMapper>();
 
 var app = builder.Build();
+await app.EnsureDeletedAndMigrateAsync<ShelteredContext>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

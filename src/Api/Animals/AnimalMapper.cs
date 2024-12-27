@@ -31,14 +31,19 @@ public interface IAnimalMapper
 }
 
 /// <inheritdoc cref="IAnimalMapper"/>
-public sealed class AnimalMapper : IAnimalMapper
+public sealed class AnimalMapper : EntityMapper, IAnimalMapper
 {
     /// <inheritdoc cref="IAnimalMapper.Create(AnimalModel)"/>
-    public AnimalEntity Create(AnimalModel animalModel) => new()
+    public AnimalEntity Create(AnimalModel animalModel)
     {
-        Name = animalModel.Name,
-        Kind = animalModel.Kind
-    };
+        var animalEntity = new AnimalEntity
+        {
+            Name = animalModel.Name,
+            Kind = animalModel.Kind
+        };
+        Update(animalEntity);
+        return animalEntity;
+    }
 
     /// <inheritdoc cref="IAnimalMapper.Map(AnimalEntity)"/>
     public AnimalModel Map(AnimalEntity animalEntity) => new()
@@ -52,5 +57,6 @@ public sealed class AnimalMapper : IAnimalMapper
     {
         animalEntity.Name = animalModel.Name;
         animalEntity.Kind = animalModel.Kind;
+        Update(animalEntity);
     }
 }
