@@ -7,6 +7,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Data;
 
 namespace Api.Configuration.Databases;
 
@@ -49,7 +50,7 @@ public static class DatabaseExtensions
     public static WebApplicationBuilder AddDatabases(this WebApplicationBuilder builder)
     {
         var databaseOptions = builder.Configuration.GetDatabaseSettings();
-        builder.Services.AddDatabase<DbContext>(databaseOptions);
+        builder.Services.AddDatabase<ShelteredContext>(databaseOptions);
         return builder;
     }
 
