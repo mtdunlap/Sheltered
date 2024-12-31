@@ -1,0 +1,23 @@
+@page "/animals/dashboard"
+@using Microsoft.AspNetCore.Components.Web;
+@using static Microsoft.AspNetCore.Components.Web.RenderMode;
+@using Client;
+@rendermode InteractiveServer
+
+<PageTitle>Animals Dashboard</PageTitle>
+
+<h1>Animals</h1>
+
+<div>
+    <div>
+        <label>Id</label>
+        <input @bind-value=IdText/>
+        <button @onclick="GetAnimalAsync">Lookup</button>
+    </div>
+    <div>
+        <label>Name</label>
+        <span>@(Animal?.Name ?? string.Empty)</span>
+        <label>Kind</label>
+        <span>@(Animal?.Kind.ToString() ?? string.Empty)</span>
+    </div>
+</div>

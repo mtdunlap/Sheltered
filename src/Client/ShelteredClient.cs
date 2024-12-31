@@ -65,7 +65,7 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
     /// <summary>
     /// A relative url representing the animals address.
     /// </summary>
-    private const string RelativeAnimalRequestBaseUrl = "animals";
+    private const string RelativeAnimalRequestBaseUrl = "animal";
 
     /// <summary>
     /// A relative <see cref="Uri"/> representing the animals address.
