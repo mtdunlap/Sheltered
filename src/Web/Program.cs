@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,3 +33,12 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+/// <summary>
+/// The main program for running the Web project.
+/// </summary>
+/// <remarks>
+/// Added to allow applying the <see cref="ExcludeFromCodeCoverageAttribute"/> to this file.
+/// </remarks>
+[ExcludeFromCodeCoverage]
+public static partial class Program { }
