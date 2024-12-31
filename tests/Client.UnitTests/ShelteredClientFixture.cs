@@ -37,7 +37,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
         {
@@ -74,7 +74,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
         {
@@ -100,7 +100,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.NoContent);
         using var httpClient = new HttpClient(handler)
         {
@@ -125,7 +125,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.NotFound);
         using var httpClient = new HttpClient(handler)
         {
@@ -162,7 +162,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
@@ -194,7 +194,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created, JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
@@ -226,10 +226,10 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
-                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animals/notaguid" } },
+                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/notaguid" } },
                 JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
         {
@@ -261,10 +261,10 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
-                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animals/{id}" } },
+                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/{id}" } },
                 JsonContent.Create<AnimalModel?>(null));
         using var httpClient = new HttpClient(handler)
         {
@@ -296,10 +296,10 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
-                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animals/{id}" } },
+                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/{id}" } },
                 JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
         {
@@ -330,10 +330,10 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals")
+            .Expect($"{baseUrl}/animal")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
-                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animals/{id}/" } },
+                new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/{id}/" } },
                 JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
         {
@@ -367,7 +367,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
         {
@@ -401,7 +401,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
         {
@@ -427,7 +427,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.NoContent);
         using var httpClient = new HttpClient(handler)
         {
@@ -452,7 +452,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.NotFound);
         using var httpClient = new HttpClient(handler)
         {
@@ -485,7 +485,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
         {
@@ -512,7 +512,7 @@ public sealed class ShelteredClientFixture
         var id = Guid.NewGuid();
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.OK, JsonContent.Create<AnimalModel?>(null));
         using var httpClient = new HttpClient(handler)
         {
@@ -544,7 +544,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.OK, JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
         {
@@ -575,7 +575,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
             .Respond(HttpStatusCode.OK, JsonContent.Create(animalModel));
         using var httpClient = new HttpClient(handler)
         {
@@ -613,7 +613,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
                 .WithJsonContent(animalModel)
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
@@ -653,7 +653,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
                 .WithJsonContent(animalModel)
             .Respond(statusCode);
         using var httpClient = new HttpClient(handler)
@@ -685,7 +685,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.NoContent);
         using var httpClient = new HttpClient(handler)
@@ -716,7 +716,7 @@ public sealed class ShelteredClientFixture
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
-            .Expect($"{baseUrl}/animals/{id}")
+            .Expect($"{baseUrl}/animal/{id}")
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.NotFound);
         using var httpClient = new HttpClient(handler)
