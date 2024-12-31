@@ -1,42 +1,40 @@
-using System;
-using System.Net.Http;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Client;
 using Client.Animals;
 
 namespace Web.Animals;
 
-public partial class Dashboard
+/// <summary>
+/// A dashboard view of all the animals.
+/// </summary>
+/// <param name="shelteredClient">An <see cref="IShelteredClient"/> to request data from the sheltered api.</param>
+public sealed partial class Dashboard(IShelteredClient shelteredClient)
 {
-    private readonly IShelteredClient _shelteredClient;
-
-    public Dashboard(IShelteredClient shelteredClient)
-    {
-        _shelteredClient = shelteredClient;
-    }
-
+    /// <summary>
+    /// Finalizes the dashboard and disposes the <see cref="IShelteredClient"/>.
+    /// </summary>
     ~Dashboard()
     {
-        _shelteredClient.Dispose();
+        shelteredClient.Dispose();
     }
 
-    public string IdText { get; set; } = string.Empty;
+    /// <summary>
+    /// Gets or sets the <see cref="IReadOnlyList{T}"/> of <see cref="AnimalModel"/>s.
+    /// </summary>
+    /// <value>The animals to display on the dashboard.</value>
+    public IReadOnlyList<AnimalModel> Animals { get; private set; } = [];
 
-    public Guid Id => Guid.TryParse(IdText, out var id) ? id : Guid.Empty;
-
-    public AnimalModel? Animal { get; private set; } = null;
-
-    public async Task GetAnimalAsync()
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
     {
         try
         {
-            Animal = await _shelteredClient.GetAnimalByIdAsync(Id, CancellationToken.None);
+            Animals = await shelteredClient.ListAnimalsAsync();
         }
-        catch (HttpRequestException e)
+        catch
         {
-            _ = e.Message;
-            Animal = await Task.FromResult<AnimalModel?>(null);
+            Animals = [];
         }
     }
 }
