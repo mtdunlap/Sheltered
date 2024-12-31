@@ -25,7 +25,7 @@ public static class DatabaseExtensions
     /// <returns>true if all of the databases are created; otherwise false.</returns>
     public static async Task<bool> EnsureDatabasesCreatedAsync(this WebApplication app, CancellationToken cancellationToken = default)
     {
-        return await app.EnsureDatabaseCreatedAsync<DbContext>(cancellationToken);
+        return await app.EnsureDatabaseCreatedAsync<ShelteredContext>(cancellationToken);
     }
 
     /// <summary>
