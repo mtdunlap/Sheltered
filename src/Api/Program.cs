@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,3 +32,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/// <summary>
+/// The main program for running the API.
+/// </summary>
+/// <remarks>
+/// Added to allow applying the <see cref="ExcludeFromCodeCoverageAttribute"/> to this file.
+/// </remarks>
+[ExcludeFromCodeCoverage]
+public static partial class Program { }

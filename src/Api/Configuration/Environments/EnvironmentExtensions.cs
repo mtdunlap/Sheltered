@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Hosting;
 
 namespace Api.Configuration.Environments;
@@ -6,6 +7,7 @@ namespace Api.Configuration.Environments;
 /// <summary>
 /// Extensions for determining application environment.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class EnvironmentExtensions
 {
     /// <summary>

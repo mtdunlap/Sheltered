@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -6,13 +7,13 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Data;
 
 namespace Api.Configuration.Databases;
 
 /// <summary>
 /// Extensions for regsitering a database to the service collection.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class DatabaseExtensions
 {
     /// <summary>
