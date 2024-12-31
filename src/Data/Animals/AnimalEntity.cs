@@ -35,8 +35,8 @@ public sealed record class AnimalEntity
     /// Gets or sets the name of the animal. May be null.
     /// </summary>
     /// <value>The name of the animal.</value>
-    [Required]
-    [Length(1, 50)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "A name is required and cannot be empty, it may however be null.")]
+    [Length(1, 50, ErrorMessage = "Name must be between 1 and 50 characters, inclusive.")]
     [Column("name", TypeName = "TEXT")]
     public required string? Name { get; set; }
 
