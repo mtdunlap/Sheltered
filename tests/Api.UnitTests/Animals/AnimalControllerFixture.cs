@@ -10,6 +10,7 @@ using Client.Animals;
 using Core.Animals;
 using Data;
 using Data.Animals;
+using System.Collections.Generic;
 
 namespace Api.UnitTests.Animals;
 
@@ -149,6 +150,60 @@ internal sealed class AnimalControllerFixture
             Assert.That(() =>
             {
                 _ = shelteredRepository.Received(Quantity.Exactly(1)).GetAnimalByIdAsync(Arg.Is(id), Arg.Is(cancellationToken));
+            }, Throws.Nothing);
+            Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
+            Assert.That(() =>
+            {
+                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(animalEntity));
+            }, Throws.Nothing);
+        });
+    }
+
+    [Test]
+    [TestOf(nameof(AnimalController.List))]
+    public async Task List__Should_return_an_enumerable_of_animal_models()
+    {
+        var id = Guid.NewGuid();
+        var cancellationToken = CancellationTokenSource.Token;
+
+        var animalEntity = new AnimalEntity
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat
+        };
+        var animals = new List<AnimalEntity>
+        {
+            animalEntity
+        };
+        var shelteredRepository = Substitute.For<IShelteredRepository>();
+        shelteredRepository
+            .ListAnimalsAsync(Arg.Is(cancellationToken))
+            .Returns(animals);
+
+        var animalModel = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat
+        };
+        var animalMapper = Substitute.For<IAnimalMapper>();
+        animalMapper
+            .Map(Arg.Is(animalEntity))
+            .Returns(animalModel);
+
+        var animalController = new AnimalController(shelteredRepository, animalMapper);
+
+        var actual = await animalController.List(cancellationToken);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual, Is.TypeOf<OkObjectResult>());
+            Assert.That((actual as OkObjectResult)?.Value, Is.Not.Null
+                .And.InstanceOf<IEnumerable<AnimalModel>>()
+                .And.EquivalentTo(new List<AnimalModel> { animalModel }));
+            Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
+            Assert.That(() =>
+            {
+                _ = shelteredRepository.Received(Quantity.Exactly(1)).ListAnimalsAsync(Arg.Is(cancellationToken));
             }, Throws.Nothing);
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,18 @@ public interface IShelteredRepository
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation and contains the <see cref="AnimalEntity"/> if found; otherwise contains null.</returns>
     Task<AnimalEntity?> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously retrieves all <see cref="AnimalEntity"/>s.
+    /// </summary>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> that represents the asynchronous operation and contains the <see cref="List{T}"/> of
+    /// <see cref="AnimalEntity"/> if found; otherwise contains null.
+    /// </returns>
+    Task<List<AnimalEntity>> ListAnimalsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Removes the provided <see cref="AnimalEntity"/> from the repository.
@@ -76,6 +89,12 @@ public sealed class ShelteredRepository(ShelteredContext shelteredContext) : ISh
     public async Task<AnimalEntity?> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await shelteredContext.Animals.SingleOrDefaultAsync(animalEntity => animalEntity.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc cref="IShelteredRepository.ListAnimalsAsync(CancellationToken)"/>
+    public async Task<List<AnimalEntity>> ListAnimalsAsync(CancellationToken cancellationToken = default)
+    {
+        return await shelteredContext.Animals.ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc cref="IShelteredRepository.RemoveAnimal(AnimalEntity)"/>

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +60,28 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
         }
         var animal = animalMapper.Map(animalEntity);
         return Ok(animal);
+    }
+
+    /// <summary>
+    /// Lists all animals.
+    /// </summary>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="StatusCodes.Status200OK"/> with a body containing an <see cref="IEnumerable{T}"/> of
+    /// <see cref="AnimalModel"/> if found; otherwise a <see cref="StatusCodes.Status404NotFound"/>.
+    /// </returns>
+    [HttpGet]
+    [EndpointName("ListAnimals")]
+    [EndpointSummary("Lists all animals.")]
+    [EndpointDescription("Returns a 200 with the body representing the list of all animals.")]
+    [ProducesResponseType<List<AnimalModel>>(StatusCodes.Status200OK, "application/json")]
+    public async Task<IActionResult> List(CancellationToken cancellationToken = default)
+    {
+        var animalEntities = await shelteredRepository.ListAnimalsAsync(cancellationToken);
+        var animalModels = animalEntities.Select(animalMapper.Map);
+        return Ok(animalModels);
     }
 
     /// <summary>

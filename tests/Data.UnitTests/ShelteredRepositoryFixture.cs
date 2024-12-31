@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Core.Animals;
 using Data.Animals;
+using System.Collections.Generic;
 
 namespace Data.UnitTests;
 
 [TestFixture]
 [TestFixtureSource(typeof(ShelteredRepositoryFixtureSource))]
-internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbContextOptionsFactory, CancellationTokenSource cancellationTokenSource) : RepositoryFixture<ShelteredContext>(dbContextOptionsFactory, cancellationTokenSource)
+internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbContextOptionsFactory,
+    CancellationTokenSource cancellationTokenSource)
+        : RepositoryFixture<ShelteredContext>(dbContextOptionsFactory, cancellationTokenSource)
 {
     protected override ShelteredContext CreateContext(DbContextOptions dbContextOptions) => new(dbContextOptions);
 
@@ -89,6 +92,28 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var actual = await repository.GetAnimalByIdAsync(animalEntity.Id, CancellationToken);
 
         Assert.That(actual, Is.EqualTo(animalEntity));
+    }
+
+    [Test]
+    public async Task ListAnimalsAsync__Should_return_the_entire_list_of_animal_entities()
+    {
+        var animalEntity = new AnimalEntity
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat
+        };
+        var animalEntities = new List<AnimalEntity>
+        {
+            animalEntity
+        };
+        await Context.AddRangeAsync(animalEntities, CancellationToken);
+        await Context.SaveChangesAsync(CancellationToken);
+
+        var repository = new ShelteredRepository(Context);
+
+        var actual = await repository.ListAnimalsAsync(CancellationToken);
+
+        Assert.That(actual, Is.EquivalentTo(animalEntities));
     }
 
     [Test]

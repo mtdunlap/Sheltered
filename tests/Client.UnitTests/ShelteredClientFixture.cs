@@ -593,6 +593,130 @@ public sealed class ShelteredClientFixture
         });
     }
 
+    private static IEnumerable<TestCaseData> ListAnimalsAsync__InvalidResponseStatusCodeSource()
+    {
+        yield return new TestCaseData(HttpStatusCode.NoContent);
+        yield return new TestCaseData(HttpStatusCode.BadRequest);
+        yield return new TestCaseData(HttpStatusCode.NotFound);
+        yield return new TestCaseData(HttpStatusCode.InternalServerError);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(ListAnimalsAsync__InvalidResponseStatusCodeSource))]
+    public void ListAnimalsAsync__Should_throw_an_http_request_exception_When_the_response_status_code_is_invalid(HttpStatusCode statusCode)
+    {
+        const string baseUrl = "http://localhost:5108";
+        using var handler = new MockHttpMessageHandler();
+        var request = handler
+            .Expect($"{baseUrl}/animal")
+            .Respond(statusCode);
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(baseUrl, UriKind.Absolute)
+        };
+        using var shelteredClient = new ShelteredClient(httpClient);
+
+        Assert.Multiple(() =>
+        {
+            const string expectedMessage = "statusCode is not OK.";
+            Assert.That(async () =>
+            {
+                _ = await shelteredClient.ListAnimalsAsync(CancellationTokenSource.Token);
+            }, Throws.TypeOf<HttpRequestException>().With.Message.EqualTo(expectedMessage));
+            Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
+            Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
+        });
+    }
+
+    [Test]
+    public void ListAnimalsAsync__Should_throw_an_http_request_exception_When_the_response_json_body_is_null()
+    {
+        const string baseUrl = "http://localhost:5108";
+        using var handler = new MockHttpMessageHandler();
+        var request = handler
+            .Expect($"{baseUrl}/animal")
+            .Respond(HttpStatusCode.OK, JsonContent.Create<List<AnimalModel>?>(null));
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(baseUrl, UriKind.Absolute)
+        };
+        using var shelteredClient = new ShelteredClient(httpClient);
+
+        Assert.Multiple(() =>
+        {
+            const string expectedMessage = "The deserialized json List was null.";
+            Assert.That(async () =>
+            {
+                _ = await shelteredClient.ListAnimalsAsync(CancellationTokenSource.Token);
+            }, Throws.TypeOf<HttpRequestException>().With.Message.EqualTo(expectedMessage));
+            Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
+            Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
+        });
+    }
+
+    [Test]
+    public void ListAnimalsAsync__Should_not_throw_an_exception_When_the_response_status_code_is_200_ok_with_a_json_body_of_a_list_of_animals()
+    {
+        const string baseUrl = "http://localhost:5108";
+        var animals = new List<AnimalModel> {
+            new()
+            {
+                Name = "Lucy",
+                Kind = AnimalKind.Cat
+            },
+        };
+        using var handler = new MockHttpMessageHandler();
+        var request = handler
+            .Expect($"{baseUrl}/animal")
+            .Respond(HttpStatusCode.OK, JsonContent.Create(animals));
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(baseUrl, UriKind.Absolute)
+        };
+        using var shelteredClient = new ShelteredClient(httpClient);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(async () =>
+            {
+                _ = await shelteredClient.ListAnimalsAsync(CancellationTokenSource.Token);
+            }, Throws.Nothing);
+            Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
+            Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
+        });
+    }
+
+    [Test]
+    public async Task ListAnimalsAsync__Should_return_a_list_of_animals_When_the_response_status_code_is_200_ok_with_a_json_body_of_a_list_of_animals()
+    {
+        const string baseUrl = "http://localhost:5108";
+        var animals = new List<AnimalModel> {
+            new()
+            {
+                Name = "Lucy",
+                Kind = AnimalKind.Cat
+            },
+        };
+        using var handler = new MockHttpMessageHandler();
+        var request = handler
+            .Expect($"{baseUrl}/animal")
+            .Respond(HttpStatusCode.OK, JsonContent.Create(animals));
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri(baseUrl, UriKind.Absolute)
+        };
+        using var shelteredClient = new ShelteredClient(httpClient);
+
+        var actual = await shelteredClient.ListAnimalsAsync(CancellationTokenSource.Token);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual, Is.EquivalentTo(animals));
+            Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
+            Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
+        });
+    }
+
     private static IEnumerable<TestCaseData> UpdateAnimalByIdAsync__InvalidResponseStatusCodeSource()
     {
         yield return new TestCaseData(HttpStatusCode.OK);
