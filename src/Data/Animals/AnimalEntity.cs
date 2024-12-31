@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using Core.Animals;
 
 namespace Data.Animals;
@@ -14,21 +15,36 @@ public sealed record class AnimalEntity
     /// <summary>
     /// Gets or inits the id of the animal.
     /// </summary>
+    /// <remarks>
+    /// The Id is not intended to be set/init by users, but is necessary so that EF Core can set the Id.
+    /// </remarks>
     /// <value>The id of the animal.</value>
-    [Column("id", TypeName = "TEXT"), Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; private init; } = Guid.Empty;
+    [Key]
+    [Required]
+    [Column("id", TypeName = "TEXT")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id
+    {
+        get;
+
+        [ExcludeFromCodeCoverage(Justification = "Cannot test a private initter.")]
+        private init;
+    } = Guid.Empty;
 
     /// <summary>
     /// Gets or sets the name of the animal. May be null.
     /// </summary>
     /// <value>The name of the animal.</value>
-    [Column("name", TypeName = "TEXT"), Required, MaxLength(50)]
+    [Required]
+    [Length(1, 50)]
+    [Column("name", TypeName = "TEXT")]
     public required string? Name { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="AnimalKind"/> of the animal.
     /// </summary>
     /// <value>The kind of the animal.</value>
-    [Column("kind", TypeName = "TEXT"), Required]
+    [Required]
+    [Column("kind", TypeName = "TEXT")]
     public required AnimalKind Kind { get; set; }
 }
