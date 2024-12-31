@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +45,13 @@ public interface IShelteredClient : IDisposable
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
     Task<AnimalModel> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously gets a <see cref="List{T}"/> of all animals.
+    /// </summary>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
+    /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<List<AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously updates an <see cref="AnimalModel"/> with the provided <paramref name="id"/>.
@@ -117,6 +125,13 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
         var requestAddress = RelativeAnimalRequestWithIdBaseAddress(id);
         return await GetFromJsonAsync<AnimalModel>(requestAddress, cancellationToken)
             ?? throw new HttpRequestException($"The deserialized json {nameof(AnimalModel)} was null.");
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default)
+    {
+        return await GetFromJsonAsync<List<AnimalModel>>(RelativeAnimalRequestBaseAddress, cancellationToken)
+            ?? throw new HttpRequestException($"The deserialized json {nameof(List<AnimalModel>)} was null.");
     }
 
     /// <inheritdoc/>
