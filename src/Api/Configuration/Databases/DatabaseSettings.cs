@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Api.Configuration.Databases;
 
 /// <summary>
 /// Represents the database configuration settings.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed record class DatabaseSettings
 {
     /// <summary>

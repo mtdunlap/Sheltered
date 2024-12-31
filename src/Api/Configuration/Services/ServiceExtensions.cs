@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Api.Animals;
@@ -8,6 +9,7 @@ namespace Api.Configuration.Services;
 /// <summary>
 /// Extensions for adding services to the service collection.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class ServiceExtensions
 {
     /// <summary>
