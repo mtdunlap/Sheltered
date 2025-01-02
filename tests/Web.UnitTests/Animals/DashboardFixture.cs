@@ -60,10 +60,7 @@ public sealed partial class DashboardFixture
         var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
         var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent)!);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
-        });
+        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
     }
 
     [Test]
@@ -135,10 +132,7 @@ public sealed partial class DashboardFixture
         var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
         var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent)!);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
-        });
+        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
     }
 
     [Test]
@@ -193,10 +187,7 @@ public sealed partial class DashboardFixture
         var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
         var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent)!);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
-        });
+        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
     }
 
     [Test]
@@ -322,12 +313,9 @@ public sealed partial class DashboardFixture
         using var dashboardPage = testContext.RenderComponent<Dashboard>();
 
         var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
-        var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent)!);
+        var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(pageTitle => pageTitle.ChildContent)!);
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
-        });
+        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
     }
 
     [Test]
