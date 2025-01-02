@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Client;
 using Client.Animals;
@@ -14,6 +15,7 @@ public sealed partial class Dashboard(IShelteredClient shelteredClient)
     /// <summary>
     /// Finalizes the dashboard and disposes the <see cref="IShelteredClient"/>.
     /// </summary>
+    [ExcludeFromCodeCoverage(Justification = "Testing a finalizer is likely difficult and flaky.")]
     ~Dashboard()
     {
         shelteredClient.Dispose();
