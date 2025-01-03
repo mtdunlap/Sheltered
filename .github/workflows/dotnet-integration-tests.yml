@@ -1,7 +1,6 @@
-name: Unit Tests
+name: Integration Tests
 
 on:
-  push:
   pull_request:
     branches: [ "main" ]
 
@@ -24,10 +23,10 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --filter Category=UnitTest --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+      run: dotnet test --filter Category=IntegrationTests --no-build --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: dotnet-unit-test-results-${{ matrix.dotnet-version }}
-        path: UnitTestResults-${{ matrix.dotnet-version }}
+        name: dotnet-integration-test-results-${{ matrix.dotnet-version }}
+        path: IntegrationTestResults-${{ matrix.dotnet-version }}
       if: ${{ always() }}
