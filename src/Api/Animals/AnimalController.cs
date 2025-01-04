@@ -80,7 +80,7 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
     public async Task<IActionResult> List(CancellationToken cancellationToken = default)
     {
         var animalEntities = await shelteredRepository.ListAnimalsAsync(cancellationToken);
-        var animalModels = animalEntities.Select(animalMapper.Map);
+        var animalModels = animalEntities.ToDictionary(animalEntity => animalEntity.Id, animalMapper.Map);
         return Ok(animalModels);
     }
 

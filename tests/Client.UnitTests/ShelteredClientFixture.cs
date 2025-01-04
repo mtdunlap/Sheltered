@@ -644,7 +644,7 @@ public sealed class ShelteredClientFixture
 
         Assert.Multiple(() =>
         {
-            const string expectedMessage = "The deserialized json List was null.";
+            const string expectedMessage = "The deserialized json Dictionary was null.";
             Assert.That(async () =>
             {
                 _ = await shelteredClient.ListAnimalsAsync(CancellationTokenSource.Token);
@@ -658,17 +658,22 @@ public sealed class ShelteredClientFixture
     public void ListAnimalsAsync__Should_not_throw_an_exception_When_the_response_status_code_is_200_ok_with_a_json_body_of_a_list_of_animals()
     {
         const string baseUrl = "http://localhost:5108";
-        var animals = new List<AnimalModel> {
-            new()
+        var id = Guid.NewGuid();
+        var idsToAnimals = new Dictionary<Guid, AnimalModel>
+        {
             {
-                Name = "Lucy",
-                Kind = AnimalKind.Cat
-            },
+                id,
+                new()
+                {
+                    Name = "Lucy",
+                    Kind = AnimalKind.Cat
+                }
+            }
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
             .Expect($"{baseUrl}/animal")
-            .Respond(HttpStatusCode.OK, JsonContent.Create(animals));
+            .Respond(HttpStatusCode.OK, JsonContent.Create(idsToAnimals));
         using var httpClient = new HttpClient(handler)
         {
             BaseAddress = new Uri(baseUrl, UriKind.Absolute)
@@ -690,17 +695,22 @@ public sealed class ShelteredClientFixture
     public async Task ListAnimalsAsync__Should_return_a_list_of_animals_When_the_response_status_code_is_200_ok_with_a_json_body_of_a_list_of_animals()
     {
         const string baseUrl = "http://localhost:5108";
-        var animals = new List<AnimalModel> {
-            new()
+        var id = Guid.NewGuid();
+        var idsToAnimals = new Dictionary<Guid, AnimalModel>
+        {
             {
-                Name = "Lucy",
-                Kind = AnimalKind.Cat
-            },
+                id,
+                new()
+                {
+                    Name = "Lucy",
+                    Kind = AnimalKind.Cat
+                }
+            }
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
             .Expect($"{baseUrl}/animal")
-            .Respond(HttpStatusCode.OK, JsonContent.Create(animals));
+            .Respond(HttpStatusCode.OK, JsonContent.Create(idsToAnimals));
         using var httpClient = new HttpClient(handler)
         {
             BaseAddress = new Uri(baseUrl, UriKind.Absolute)
@@ -711,7 +721,7 @@ public sealed class ShelteredClientFixture
 
         Assert.Multiple(() =>
         {
-            Assert.That(actual, Is.EquivalentTo(animals));
+            Assert.That(actual, Is.EquivalentTo(idsToAnimals));
             Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
             Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
         });
