@@ -198,8 +198,8 @@ internal sealed class AnimalControllerFixture
         {
             Assert.That(actual, Is.TypeOf<OkObjectResult>());
             Assert.That((actual as OkObjectResult)?.Value, Is.Not.Null
-                .And.InstanceOf<IEnumerable<AnimalModel>>()
-                .And.EquivalentTo(new List<AnimalModel> { animalModel }));
+                .And.InstanceOf<IDictionary<Guid, AnimalModel>>()
+                .And.EquivalentTo(new Dictionary<Guid, AnimalModel> { { animalEntity.Id, animalModel } }));
             Assert.That(shelteredRepository.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {

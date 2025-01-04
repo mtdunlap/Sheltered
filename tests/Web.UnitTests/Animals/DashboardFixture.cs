@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading;
 using Bunit;
@@ -10,6 +11,7 @@ using Client;
 using Client.Animals;
 using Core.Animals;
 using Web.Animals;
+using System.Collections.Generic;
 
 namespace Web.UnitTests.Animals;
 
@@ -175,7 +177,10 @@ public sealed partial class DashboardFixture
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([animalModel]);
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { Guid.NewGuid(), animalModel}
+            });
 
         testContext.Services.AddSingleton(shelteredClient);
 
@@ -204,7 +209,10 @@ public sealed partial class DashboardFixture
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([animalModel]);
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { Guid.NewGuid(), animalModel}
+            });
 
         testContext.Services.AddSingleton(shelteredClient);
 
@@ -224,6 +232,7 @@ public sealed partial class DashboardFixture
 
         using var shelteredClient = Substitute.For<IShelteredClient>();
 
+        var id = Guid.NewGuid();
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
@@ -231,7 +240,10 @@ public sealed partial class DashboardFixture
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([animalModel]);
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { id, animalModel}
+            });
 
         testContext.Services.AddSingleton(shelteredClient);
 
@@ -241,10 +253,12 @@ public sealed partial class DashboardFixture
 
         Assert.That(() =>
         {
-            dashboardPage.MarkupMatches(@"
+            dashboardPage.MarkupMatches(@$"
                 <h1>Animals</h1>
                 <div>
-                    <div>AnimalPreview</div>
+                    <a href=""animals/{id}"">
+                        <div>AnimalPreview</div>
+                    </a>
                 </div>
             ");
         }, Throws.Nothing);
@@ -276,7 +290,12 @@ public sealed partial class DashboardFixture
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([lucyTheCat, jakeTheDog, neekoTheCat]);
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { Guid.NewGuid(), lucyTheCat },
+                { Guid.NewGuid(), jakeTheDog },
+                { Guid.NewGuid(), neekoTheCat }
+            });
 
         testContext.Services.AddSingleton(shelteredClient);
 
@@ -291,35 +310,6 @@ public sealed partial class DashboardFixture
 
     [Test]
     public void Should_render_the_title_When_the_sheltered_client_responds_successfully_And_returns_three_animal_model()
-    {
-        using var testContext = new Bunit.TestContext();
-
-        using var shelteredClient = Substitute.For<IShelteredClient>();
-
-        var animalModel = new AnimalModel
-        {
-            Name = "Lucy",
-            Kind = AnimalKind.Cat
-        };
-        shelteredClient
-            .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([animalModel]);
-
-        testContext.Services.AddSingleton(shelteredClient);
-
-        testContext.ComponentFactories.AddStub<PageTitle>();
-        testContext.ComponentFactories.AddStub<AnimalPreview>();
-
-        using var dashboardPage = testContext.RenderComponent<Dashboard>();
-
-        var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
-        var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(pageTitle => pageTitle.ChildContent)!);
-
-        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
-    }
-
-    [Test]
-    public void Should_render_the_templated_html_When_the_sheltered_client_responds_successfully_And_returns_three_animal_model()
     {
         using var testContext = new Bunit.TestContext();
 
@@ -344,7 +334,59 @@ public sealed partial class DashboardFixture
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
-            .Returns([lucyTheCat, jakeTheDog, neekoTheCat]);
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { Guid.NewGuid(), lucyTheCat },
+                { Guid.NewGuid(), jakeTheDog },
+                { Guid.NewGuid(), neekoTheCat }
+            });
+
+        testContext.Services.AddSingleton(shelteredClient);
+
+        testContext.ComponentFactories.AddStub<PageTitle>();
+        testContext.ComponentFactories.AddStub<AnimalPreview>();
+
+        using var dashboardPage = testContext.RenderComponent<Dashboard>();
+
+        var pageTitleStub = dashboardPage.FindComponent<Stub<PageTitle>>();
+        var pageTitle = testContext.Render(pageTitleStub.Instance.Parameters.Get(pageTitle => pageTitle.ChildContent)!);
+
+        Assert.That(pageTitle.Markup, Is.EqualTo("Animals Dashboard"));
+    }
+
+    [Test]
+    public void Should_render_the_templated_html_When_the_sheltered_client_responds_successfully_And_returns_three_animal_model()
+    {
+        using var testContext = new Bunit.TestContext();
+
+        using var shelteredClient = Substitute.For<IShelteredClient>();
+
+        var lucysId = Guid.NewGuid();
+        var lucyTheCat = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat
+        };
+        var jakesId = Guid.NewGuid();
+        var jakeTheDog = new AnimalModel
+        {
+            Name = "Jake",
+            Kind = AnimalKind.Dog
+        };
+        var neekosId = Guid.NewGuid();
+        var neekoTheCat = new AnimalModel
+        {
+            Name = "Neeko",
+            Kind = AnimalKind.Cat
+        };
+        shelteredClient
+            .ListAnimalsAsync(Arg.Any<CancellationToken>())
+            .Returns(new Dictionary<Guid, AnimalModel>
+            {
+                { lucysId, lucyTheCat },
+                { jakesId, jakeTheDog },
+                { neekosId, neekoTheCat }
+            });
 
         testContext.Services.AddSingleton(shelteredClient);
 
@@ -356,12 +398,18 @@ public sealed partial class DashboardFixture
 
         Assert.That(() =>
         {
-            dashboardPage.MarkupMatches(@"
+            dashboardPage.MarkupMatches($@"
                 <h1>Animals</h1>
                 <div>
-                    <div>AnimalPreview</div>
-                    <div>AnimalPreview</div>
-                    <div>AnimalPreview</div>
+                    <a href=""animals/{lucysId}"">
+                        <div>AnimalPreview</div>
+                    </a>
+                    <a href=""animals/{jakesId}"">
+                        <div>AnimalPreview</div>
+                    </a>
+                    <a href=""animals/{neekosId}"">
+                        <div>AnimalPreview</div>
+                    </a>
                 </div>
             ");
         }, Throws.Nothing);

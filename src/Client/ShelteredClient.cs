@@ -51,7 +51,7 @@ public interface IShelteredClient : IDisposable
     /// </summary>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<List<AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default);
+    Task<Dictionary<Guid, AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously updates an <see cref="AnimalModel"/> with the provided <paramref name="id"/>.
@@ -128,10 +128,10 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
     }
 
     /// <inheritdoc/>
-    public async Task<List<AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default)
+    public async Task<Dictionary<Guid, AnimalModel>> ListAnimalsAsync(CancellationToken cancellationToken = default)
     {
-        return await GetFromJsonAsync<List<AnimalModel>>(RelativeAnimalRequestBaseAddress, cancellationToken)
-            ?? throw new HttpRequestException($"The deserialized json {nameof(List<AnimalModel>)} was null.");
+        return await GetFromJsonAsync<Dictionary<Guid, AnimalModel>>(RelativeAnimalRequestBaseAddress, cancellationToken)
+            ?? throw new HttpRequestException($"The deserialized json {nameof(Dictionary<Guid, AnimalModel>)} was null.");
     }
 
     /// <inheritdoc/>

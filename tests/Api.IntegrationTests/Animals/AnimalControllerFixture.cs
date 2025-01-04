@@ -209,6 +209,9 @@ internal sealed class AnimalControllerFixture
         using var cancellationTokenSource = new CancellationTokenSource();
         using var shelteredClient = webApplicationFactory.CreateShelteredClient();
 
+        Guid lucysId = Guid.Empty;
+        Guid jakesId = Guid.Empty;
+        Guid neekosId = Guid.Empty;
         await using (var shelteredContext = webApplicationFactory.GetDbContext<ShelteredContext>())
         {
             var lucyTheCat = new AnimalEntity
@@ -231,6 +234,10 @@ internal sealed class AnimalControllerFixture
 
             await shelteredContext.AddRangeAsync([lucyTheCat, jakeTheDog, neekoTheCat], cancellationTokenSource.Token);
             _ = await shelteredContext.SaveChangesAsync(cancellationTokenSource.Token);
+
+            lucysId = lucyTheCat.Id;
+            jakesId = jakeTheDog.Id;
+            neekosId = neekoTheCat.Id;
         }
 
         var actual = await shelteredClient.ListAnimalsAsync(cancellationTokenSource.Token);
@@ -238,20 +245,23 @@ internal sealed class AnimalControllerFixture
         Assert.Multiple(() =>
         {
             Assert.That(actual, Has.Exactly(3).Items);
-            Assert.That(actual, Has.Exactly(1).Matches<AnimalModel>(animalModel =>
+            Assert.That(actual, Has.Exactly(1).Matches<KeyValuePair<Guid, AnimalModel>>(idToAnimal =>
             {
-                return string.Equals(animalModel.Name, "Lucy", StringComparison.InvariantCulture)
-                    && animalModel.Kind == AnimalKind.Cat;
+                return idToAnimal.Key == lucysId
+                    && string.Equals(idToAnimal.Value.Name, "Lucy", StringComparison.InvariantCulture)
+                    && idToAnimal.Value.Kind == AnimalKind.Cat;
             }));
-            Assert.That(actual, Has.Exactly(1).Matches<AnimalModel>(animalModel =>
+            Assert.That(actual, Has.Exactly(1).Matches<KeyValuePair<Guid, AnimalModel>>(idToAnimal =>
             {
-                return string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
-                    && animalModel.Kind == AnimalKind.Dog;
+                return idToAnimal.Key == jakesId
+                    && string.Equals(idToAnimal.Value.Name, "Jake", StringComparison.InvariantCulture)
+                    && idToAnimal.Value.Kind == AnimalKind.Dog;
             }));
-            Assert.That(actual, Has.Exactly(1).Matches<AnimalModel>(animalModel =>
+            Assert.That(actual, Has.Exactly(1).Matches<KeyValuePair<Guid, AnimalModel>>(idToAnimal =>
             {
-                return string.Equals(animalModel.Name, "Neeko", StringComparison.InvariantCulture)
-                    && animalModel.Kind == AnimalKind.Cat;
+                return idToAnimal.Key == neekosId
+                    && string.Equals(idToAnimal.Value.Name, "Neeko", StringComparison.InvariantCulture)
+                    && idToAnimal.Value.Kind == AnimalKind.Cat;
             }));
         });
     }

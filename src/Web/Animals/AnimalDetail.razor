@@ -1,0 +1,16 @@
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Client
+@namespace Web.Animals
+@page "/animals/{id:guid}"
+
+<PageTitle>@(Animal?.Name ?? string.Empty)</PageTitle>
+
+<h1>@(Animal?.Name ?? string.Empty)</h1>
+
+<div>
+    <label>Name</label>
+    <span>@(Animal?.Name ?? string.Empty)</span>
+    <label>Kind</label>
+    <span>@Animal?.Kind.ToString()</span>
+</div>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -22,21 +23,21 @@ public sealed partial class Dashboard(IShelteredClient shelteredClient)
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="IReadOnlyList{T}"/> of <see cref="AnimalModel"/>s.
+    /// Gets or sets the <see cref="IReadOnlyDictionary{TKey, TValue}"/> of <see cref="AnimalModel"/>s.
     /// </summary>
     /// <value>The animals to display on the dashboard.</value>
-    public IReadOnlyList<AnimalModel> Animals { get; private set; } = [];
+    public IReadOnlyDictionary<Guid, AnimalModel> IdsToAnimals { get; private set; } = new Dictionary<Guid, AnimalModel>();
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Animals = await shelteredClient.ListAnimalsAsync();
+            IdsToAnimals = await shelteredClient.ListAnimalsAsync();
         }
         catch
         {
-            Animals = [];
+            IdsToAnimals = new Dictionary<Guid, AnimalModel>();
         }
     }
 }

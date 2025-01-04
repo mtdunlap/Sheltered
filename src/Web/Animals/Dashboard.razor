@@ -2,7 +2,7 @@
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Client
 @namespace Web.Animals
-@page "/animals/dashboard"
+@page "/animals"
 @rendermode InteractiveServer
 
 <PageTitle>Animals Dashboard</PageTitle>
@@ -10,8 +10,10 @@
 <h1>Animals</h1>
 
 <div>
-@foreach (var animal in @Animals)
+@foreach (var (id, animal) in IdsToAnimals)
 {
-    <AnimalPreview Animal="@animal"/>
+    <a href="@($"animals/{id}")">
+        <AnimalPreview Animal="@animal"/>
+    </a>
 }
 </div>
