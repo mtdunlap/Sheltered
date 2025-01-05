@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using Bunit;
@@ -11,14 +12,40 @@ using Client;
 using Client.Animals;
 using Core.Animals;
 using Web.Animals;
-using System.Collections.Generic;
 
 namespace Web.UnitTests.Animals;
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
-public sealed partial class DashboardFixture
+internal sealed class DashboardFixture
 {
+    [Test]
+    public void Should_navigate_to_the_add_a_new_animal_page_When_the_add_a_new_animal_button_is_clicked()
+    {
+        using var testContext = new Bunit.TestContext();
+
+        using var shelteredClient = Substitute.For<IShelteredClient>();
+
+        shelteredClient
+            .ListAnimalsAsync(Arg.Any<CancellationToken>())
+            .ThrowsAsync<HttpRequestException>();
+
+        testContext.Services.AddSingleton(shelteredClient);
+
+        testContext.ComponentFactories.AddStub<AnimalPreview>();
+
+        using var dashboardPage = testContext.RenderComponent<Dashboard>();
+
+        var button = dashboardPage.Find("button");
+        button.Click();
+
+        var navigationManager = testContext.Services.GetRequiredService<FakeNavigationManager>();
+
+        const string expectedRelativeUrl = "animals/new";
+        var expected = navigationManager.BaseUri + expectedRelativeUrl;
+        Assert.That(navigationManager.Uri, Is.EqualTo(expected));
+    }
+
     [Test]
     public void Should_not_render_any_animal_previews_When_the_sheltered_client_throws_an_exception()
     {
@@ -86,6 +113,7 @@ public sealed partial class DashboardFixture
         {
             dashboardPage.MarkupMatches(@"
                 <h1>Animals</h1>
+                <button class=""btn btn-primary"">Add a New Animal</button>
                 <div></div>
             ");
         }, Throws.Nothing);
@@ -158,6 +186,7 @@ public sealed partial class DashboardFixture
         {
             dashboardPage.MarkupMatches(@"
                 <h1>Animals</h1>
+                <button class=""btn btn-primary"">Add a New Animal</button>
                 <div></div>
             ");
         }, Throws.Nothing);
@@ -255,6 +284,7 @@ public sealed partial class DashboardFixture
         {
             dashboardPage.MarkupMatches(@$"
                 <h1>Animals</h1>
+                <button class=""btn btn-primary"">Add a New Animal</button>
                 <div>
                     <a href=""animals/{id}"">
                         <div>AnimalPreview</div>
@@ -400,6 +430,7 @@ public sealed partial class DashboardFixture
         {
             dashboardPage.MarkupMatches($@"
                 <h1>Animals</h1>
+                <button class=""btn btn-primary"">Add a New Animal</button>
                 <div>
                     <a href=""animals/{lucysId}"">
                         <div>AnimalPreview</div>

@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Client
+@using Core.Animals;
+@namespace Web.Animals
+@page "/animals/new"
+@rendermode InteractiveServer
+
+<PageTitle>New Animal</PageTitle>
+
+<h1>Add a New Animal</h1>
+
+<div>
+    <label for="name">Name</label>
+    <InputText id="name" @bind-Value="@Name"/>
+    <label for="kind">Kind</label>
+    <InputSelect id="kind" @bind-Value="@Kind">
+        @foreach (var kind in Enum.GetValues<AnimalKind>())
+        {
+            <option value="@kind">@kind</option>
+        }
+    </InputSelect>
+    <button class="btn btn-primary" @onclick="CreateNewAnimalAsync">Submit</button>
+    <div hidden="@(!HasSubmissionErrors)">@ErrorMessage</div>
+</div>
