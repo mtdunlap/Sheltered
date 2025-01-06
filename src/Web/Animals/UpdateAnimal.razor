@@ -1,0 +1,33 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Client
+@using Core.Animals
+@namespace Web.Animals
+@page "/animals/update/{id:guid}"
+@rendermode InteractiveServer
+
+<PageTitle>Update</PageTitle>
+
+<h1>Update Animal</h1>
+
+<div>
+    <label>Current Name</label>
+    <span>@(Current?.Name ?? string.Empty)</span>
+    <label>Current Kind</label>
+    <span>@Current?.Kind.ToString()</span>
+</div>
+
+<div>
+    <label for="name">New Name</label>
+    <InputText id="name" @bind-Value="@Name"/>
+    <label for="kind">New Kind</label>
+    <InputSelect id="kind" @bind-Value="@Kind">
+        @foreach (var kind in Enum.GetValues<AnimalKind>())
+        {
+            <option value="@kind">@kind</option>
+        }
+    </InputSelect>
+    <button class="btn btn-primary" @onclick="UpdateAnimalAsync">Submit</button>
+    <div hidden="@(!HasSubmissionErrors)">@ErrorMessage</div>
+</div>
