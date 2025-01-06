@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Client;
@@ -38,6 +40,19 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
     public AnimalModel? Current { get; private set; } = null;
 
     /// <summary>
+    /// Gets a <see cref="bool"/> indicating if the page load has any errors.
+    /// </summary>
+    /// <value>true if the page load has errors; otherwise false.</value>
+    [MemberNotNullWhen(false, nameof(Current))]
+    public bool HasLoadErrors => Current is null;
+
+    /// <summary>
+    /// Gets or sets a <see cref="string"/> representing the load error message.
+    /// </summary>
+    /// <value>The last erorr message from a failed load.</value>
+    public string LoadErrorMessage { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the animals name.
     /// </summary>
     /// <value>The name of the animal.</value>
@@ -59,7 +74,7 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
     /// Gets or sets a <see cref="string"/> representing the submission error message.
     /// </summary>
     /// <value>The last erorr message from a failed submission.</value>
-    public string ErrorMessage { get; set; } = string.Empty;
+    public string SubmissionErrorMessage { get; set; } = string.Empty;
 
     /// <summary>
     /// Updates the current <see cref="AnimalModel"/> with the updated information.
@@ -70,7 +85,7 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
         try
         {
             HasSubmissionErrors = false;
-            ErrorMessage = string.Empty;
+            SubmissionErrorMessage = string.Empty;
             var animalModel = new AnimalModel
             {
                 Name = Name,
@@ -84,13 +99,13 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
             else
             {
                 HasSubmissionErrors = true;
-                ErrorMessage = "The animal could not be updated as it does not exist.";
+                SubmissionErrorMessage = "The animal could not be updated as it does not exist.";
             }
         }
         catch
         {
             HasSubmissionErrors = true;
-            ErrorMessage = "An unknown error occurred, please try again momentarily.";
+            SubmissionErrorMessage = "An unknown error occurred, please try again momentarily.";
         }
     }
 
@@ -101,9 +116,23 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
         {
             Current = await shelteredClient.GetAnimalByIdAsync(Id);
         }
+        catch (HttpRequestException httpRequestException)
+        {
+            if (httpRequestException.StatusCode == HttpStatusCode.NotFound)
+            {
+                Current = null;
+                LoadErrorMessage = "The requested animal was not found.";
+            }
+            else
+            {
+                Current = null;
+                LoadErrorMessage = "An unknown error occurred, please try again momentarily.";
+            }
+        }
         catch
         {
             Current = null;
+            LoadErrorMessage = "An unknown error occurred, please try again momentarily.";
         }
     }
 }

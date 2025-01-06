@@ -11,23 +11,33 @@
 
 <h1>Update Animal</h1>
 
-<div>
-    <label>Current Name</label>
-    <span>@(Current?.Name ?? string.Empty)</span>
-    <label>Current Kind</label>
-    <span>@Current?.Kind.ToString()</span>
-</div>
+@if(HasLoadErrors)
+{
+    <div>@LoadErrorMessage</div>
+}
+else
+{
+    <div>
+        <label>Current Name</label>
+        <span>@Current.Name</span>
+        <label>Current Kind</label>
+        <span>@Current.Kind.ToString()</span>
+    </div>
 
-<div>
-    <label for="name">New Name</label>
-    <InputText id="name" @bind-Value="@Name"/>
-    <label for="kind">New Kind</label>
-    <InputSelect id="kind" @bind-Value="@Kind">
-        @foreach (var kind in Enum.GetValues<AnimalKind>())
+    <div>
+        <label for="name">New Name</label>
+        <InputText id="name" @bind-Value="@Name"/>
+        <label for="kind">New Kind</label>
+        <InputSelect id="kind" @bind-Value="@Kind">
+            @foreach (var kind in Enum.GetValues<AnimalKind>())
+            {
+                <option value="@kind">@kind</option>
+            }
+        </InputSelect>
+        <button class="btn btn-primary" @onclick="UpdateAnimalAsync">Submit</button>
+        @if(HasSubmissionErrors)
         {
-            <option value="@kind">@kind</option>
+            <div>@SubmissionErrorMessage</div>
         }
-    </InputSelect>
-    <button class="btn btn-primary" @onclick="UpdateAnimalAsync">Submit</button>
-    <div hidden="@(!HasSubmissionErrors)">@ErrorMessage</div>
-</div>
+    </div>
+}
