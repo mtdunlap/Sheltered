@@ -3,6 +3,7 @@
 @using Client
 @namespace Web.Animals
 @page "/animals/{id:guid}"
+@rendermode InteractiveServer
 
 <PageTitle>@(Animal?.Name ?? string.Empty)</PageTitle>
 
@@ -14,3 +15,8 @@
     <label>Kind</label>
     <span>@Animal?.Kind.ToString()</span>
 </div>
+
+@if(Animal is not null)
+{
+    <button class="btn btn-primary" @onclick="NavigateToUpdateAnimalPage">Update Animal</button>
+}

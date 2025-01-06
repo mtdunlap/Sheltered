@@ -10,7 +10,9 @@ namespace Web.Animals;
 /// <summary>
 /// Represents a detailed view of an animal.
 /// </summary>
-public sealed partial class AnimalDetail(IShelteredClient shelteredClient)
+/// <param name="shelteredClient">An <see cref="IShelteredClient"/> to request data from the sheltered api.</param>
+/// <param name="navigationManager">A <see cref="NavigationManager"/> for navigating to other pages.</param>
+public sealed partial class AnimalDetail(IShelteredClient shelteredClient, NavigationManager navigationManager)
 {
     /// <summary>
     /// Finalizes the animal detail and disposes the <see cref="IShelteredClient"/>.
@@ -33,6 +35,14 @@ public sealed partial class AnimalDetail(IShelteredClient shelteredClient)
     /// </summary>
     /// <value>The animal. May be null.</value>
     public AnimalModel? Animal { get; private set; }
+
+    /// <summary>
+    /// Navigates to the update animal page.
+    /// </summary>
+    public void NavigateToUpdateAnimalPage()
+    {
+        navigationManager.NavigateTo($"animals/update/{Id}");
+    }
 
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
