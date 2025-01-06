@@ -19,4 +19,9 @@
 @if(Animal is not null)
 {
     <button class="btn btn-primary" @onclick="NavigateToUpdateAnimalPage">Update Animal</button>
+    <button class="btn btn-primary" @onclick="DeleteAnimalAsync">Delete Animal</button>
+    @if(HasDeletionErrors)
+    {
+        <div>@DeletionErrorMessage</div>
+    }
 }
