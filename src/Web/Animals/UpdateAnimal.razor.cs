@@ -1,10 +1,10 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Client;
 using Client.Animals;
 using Core.Animals;
-using System;
 
 namespace Web.Animals;
 
