@@ -13,6 +13,8 @@
     <span>@(Animal?.Name ?? string.Empty)</span>
     <label>Kind</label>
     <span>@Animal?.Kind.ToString()</span>
+    <label>Sex</label>
+    <span>@Animal?.Sex.ToString()</span>
 </div>
 
 @if(Animal is not null)

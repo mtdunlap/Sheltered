@@ -65,6 +65,12 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
     public AnimalKind Kind { get; set; } = AnimalKind.Unspecified;
 
     /// <summary>
+    /// Gets or sets the sex of the animal.
+    /// </summary>
+    /// <value>The sex of the animal.</value>
+    public AnimalSex Sex { get; set; } = AnimalSex.Unknown;
+
+    /// <summary>
     /// Gets or sets a <see cref="bool"/> indicating if the submission has any errors.
     /// </summary>
     /// <value>true if the submission has errors; otherwise false.</value>
@@ -89,7 +95,8 @@ public sealed partial class UpdateAnimal(IShelteredClient shelteredClient, Navig
             var animalModel = new AnimalModel
             {
                 Name = Name,
-                Kind = Kind
+                Kind = Kind,
+                Sex = Sex
             };
             var isSuccessful = await shelteredClient.UpdateAnimalByIdAsync(Id, animalModel);
             if (isSuccessful)

@@ -21,6 +21,8 @@ else
         <span>@Current.Name</span>
         <label>Current Kind</label>
         <span>@Current.Kind.ToString()</span>
+        <label>Current Sex</label>
+        <span>@Current.Sex.ToString()</span>
     </div>
 
     <div>
@@ -31,6 +33,13 @@ else
             @foreach (var kind in Enum.GetValues<AnimalKind>())
             {
                 <option value="@kind">@kind</option>
+            }
+        </InputSelect>
+        <label for="sex">New Sex</label>
+        <InputSelect id="sex" @bind-Value="@Sex">
+            @foreach (var sex in Enum.GetValues<AnimalSex>())
+            {
+                <option value="@sex">@sex</option>
             }
         </InputSelect>
         <button class="btn btn-primary" @onclick="UpdateAnimalAsync">Submit</button>

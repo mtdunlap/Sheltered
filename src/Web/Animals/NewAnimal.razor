@@ -21,6 +21,13 @@
             <option value="@kind">@kind</option>
         }
     </InputSelect>
+    <label for="sex">Sex</label>
+    <InputSelect id="sex" @bind-Value="@Sex">
+        @foreach (var sex in Enum.GetValues<AnimalSex>())
+        {
+            <option value="@sex">@sex</option>
+        }
+    </InputSelect>
     <button class="btn btn-primary" @onclick="CreateNewAnimalAsync">Submit</button>
     <div hidden="@(!HasSubmissionErrors)">@ErrorMessage</div>
 </div>
