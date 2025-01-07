@@ -37,14 +37,16 @@ public sealed class AnimalMapper : IAnimalMapper
     public AnimalEntity Create(AnimalModel animalModel) => new()
     {
         Name = animalModel.Name,
-        Kind = animalModel.Kind
+        Kind = animalModel.Kind,
+        Sex = animalModel.Sex
     };
 
     /// <inheritdoc cref="IAnimalMapper.Map(AnimalEntity)"/>
     public AnimalModel Map(AnimalEntity animalEntity) => new()
     {
         Name = animalEntity.Name,
-        Kind = animalEntity.Kind
+        Kind = animalEntity.Kind,
+        Sex = animalEntity.Sex
     };
 
     /// <inheritdoc cref="IAnimalMapper.Update(AnimalEntity, AnimalModel)"/>
@@ -52,5 +54,6 @@ public sealed class AnimalMapper : IAnimalMapper
     {
         animalEntity.Name = animalModel.Name;
         animalEntity.Kind = animalModel.Kind;
+        animalEntity.Sex = animalModel.Sex;
     }
 }

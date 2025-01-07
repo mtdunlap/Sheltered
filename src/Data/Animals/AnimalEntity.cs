@@ -47,4 +47,12 @@ public sealed record class AnimalEntity
     [Required]
     [Column("kind", TypeName = "TEXT")]
     public required AnimalKind Kind { get; set; }
+
+    /// <summary>
+    /// Gets or sets the <see cref="AnimalSex"/> of the animal.
+    /// </summary>
+    /// <value>The sex of the animal.</value>
+    [Required]
+    [Column("sex", TypeName = "TEXT")]
+    public required AnimalSex Sex { get; set; }
 }

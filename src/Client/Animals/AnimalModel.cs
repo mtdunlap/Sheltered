@@ -26,4 +26,13 @@ public sealed record class AnimalModel
     [JsonPropertyName("kind")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required AnimalKind Kind { get; init; } = AnimalKind.Unspecified;
+
+    /// <summary>
+    /// Gets or inits the <see cref="AnimalSex"/> of the animal.
+    /// </summary>
+    /// <value>The sex of the animal.</value>
+    [Required(AllowEmptyStrings = false, ErrorMessage = "The animal sex was not within the range of accepted values.")]
+    [JsonPropertyName("sex")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public required AnimalSex Sex { get; init; } = AnimalSex.Unknown;
 }
