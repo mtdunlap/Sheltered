@@ -23,7 +23,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --filter Category=IntegrationTests --no-build --verbosity normal --logger trx --results-directory "IntegrationTestResults-${{ matrix.dotnet-version }}"
+      run: dotnet test --filter Category=IntegrationTest --no-build --verbosity normal --logger trx --results-directory "IntegrationTestResults-${{ matrix.dotnet-version }}"
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
