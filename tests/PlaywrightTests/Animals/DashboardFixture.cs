@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Tests.Common;
 
 namespace PlaywrightTests.Animals;
 
 [TestFixture]
+[BrowserAutomationTest]
 [Parallelizable(ParallelScope.Self)]
 internal sealed class DashboardFixture : BlazorPageTest
 {

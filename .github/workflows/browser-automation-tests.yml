@@ -1,0 +1,37 @@
+name: Browser Automation Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.x' ]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Ensure browsers are installed
+      run: pwsh bin/Debug/net9.0/playwright.ps1 install --with-deps
+    - name: Test
+      run: dotnet test --filter Category=BrowserAutomationTest --no-build --verbosity normal --logger trx --results-directory "BrowserAutomationTestResults-${{ matrix.dotnet-version }}"
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-browser-automation-test-results-${{ matrix.dotnet-version }}
+        path: BrowserAutomationTestResults-${{ matrix.dotnet-version }}
+      if: ${{ always() }}
