@@ -1,13 +1,13 @@
-name: Unit Tests
+name: Api Integration Tests
 
 on:
-  push:
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
 
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,10 +24,10 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --filter Category=UnitTest --no-build --verbosity normal --logger trx --results-directory "UnitTestResults-${{ matrix.dotnet-version }}"
+      run: dotnet test tests/Api.IntegrationTests --no-build --verbosity normal --logger trx --results-directory "ApiIntegrationTestResults-${{ matrix.dotnet-version }}"
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: dotnet-unit-test-results-${{ matrix.dotnet-version }}
-        path: UnitTestResults-${{ matrix.dotnet-version }}
+        name: api-integration-test-results-${{ matrix.dotnet-version }}
+        path: ApiIntegrationTestResults-${{ matrix.dotnet-version }}
       if: ${{ always() }}
