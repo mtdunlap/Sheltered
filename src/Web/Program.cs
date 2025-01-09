@@ -41,4 +41,4 @@ app.Run();
 /// Added to allow applying the <see cref="ExcludeFromCodeCoverageAttribute"/> to this file.
 /// </remarks>
 [ExcludeFromCodeCoverage]
-public static partial class Program { }
+public sealed partial class Program { }
