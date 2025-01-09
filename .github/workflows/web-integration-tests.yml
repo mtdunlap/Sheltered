@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         dotnet-version: [ '9.x' ]
-        browser: [ "chromium", "firefox" ]
+        browser: [ "chromium", "firefox", "webkit" ]
 
     steps:
     - uses: actions/checkout@v4
