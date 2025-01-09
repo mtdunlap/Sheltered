@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Ensure browsers are installed
-      run: pwsh tests/Web.IntegrationTests/bin/Debug/net9.0/playwright.ps1 install --with-deps --only-shell ${{ matrix.browser }}
+      run: pwsh tests/Web.IntegrationTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
     - name: Test
       run: dotnet test tests/Web.IntegrationTests --settings:tests/Web.IntegrationTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "WebIntegrationTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
     - name: Upload results
