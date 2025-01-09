@@ -1,0 +1,36 @@
+name: Web Integration Tests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.x' ]
+        browser: [ "chromium", "firefox" ]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Ensure browsers are installed
+      run: pwsh bin/Debug/net9.0/playwright.ps1 install --with-deps --only-shell ${{ matrix.browser }}
+    - name: Test
+      run: dotnet test tests/Web.IntegrationTests --settings:tests/Web.IntegrationTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "WebIntegrationTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: dotnet-web-integration-test-results-${{ matrix.browser }}-${{ matrix.dotnet-version }}
+        path: WebIntegrationTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}
+      if: ${{ always() }}
