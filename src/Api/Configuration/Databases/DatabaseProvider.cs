@@ -8,5 +8,10 @@ public enum DatabaseProvider
     /// <summary>
     /// The datbase provider is SQLite.
     /// </summary>
-    SQLite = 1
+    SQLite = 1,
+
+    /// <summary>
+    /// PostgreSQL
+    /// </summary>
+    NpgSQL = 2
 }

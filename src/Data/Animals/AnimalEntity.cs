@@ -1,7 +1,5 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Core.Animals;
 
 namespace Data.Animals;
@@ -9,42 +7,25 @@ namespace Data.Animals;
 /// <summary>
 /// Represents an entity for an animal.
 /// </summary>
-[Table("animals", Schema = "sheltered")]
-public sealed record class AnimalEntity
+[EntityTypeConfiguration(typeof(AnimalEntityConfiguration))]
+public sealed record class AnimalEntity : Entity, IEntity<AnimalEntity>
 {
-    /// <summary>
-    /// Gets or inits the id of the animal.
-    /// </summary>
-    /// <remarks>
-    /// The Id is not intended to be set/init by users, but is necessary so that EF Core can set the Id.
-    /// </remarks>
-    /// <value>The id of the animal.</value>
-    [Key]
-    [Required]
-    [Column("id", TypeName = "TEXT")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id
+    public static AnimalEntity NotFound { get; } = new()
     {
-        get;
-
-        [ExcludeFromCodeCoverage(Justification = "Cannot test a private initter.")]
-        private init;
-    } = Guid.Empty;
+        Id = Guid.Empty,
+        Name = string.Empty,
+        Kind = AnimalKind.Unspecified
+    };
 
     /// <summary>
     /// Gets or sets the name of the animal. May be null.
     /// </summary>
     /// <value>The name of the animal.</value>
-    [Required(AllowEmptyStrings = false, ErrorMessage = "A name is required and cannot be empty, it may however be null.")]
-    [Length(1, 50, ErrorMessage = "Name must be between 1 and 50 characters, inclusive.")]
-    [Column("name", TypeName = "TEXT")]
-    public required string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="AnimalKind"/> of the animal.
     /// </summary>
     /// <value>The kind of the animal.</value>
-    [Required]
-    [Column("kind", TypeName = "TEXT")]
     public required AnimalKind Kind { get; set; }
 }

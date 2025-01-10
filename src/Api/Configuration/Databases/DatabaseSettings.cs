@@ -2,26 +2,18 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Api.Configuration.Databases;
 
-/// <summary>
-/// Represents the database configuration settings.
-/// </summary>
 [ExcludeFromCodeCoverage]
-public sealed record class DatabaseSettings
+public abstract record class DatabaseSettings
 {
-    /// <summary>
-    /// The key for the database settings.
-    /// </summary>
-    public const string Key = "Database";
+    public required DatabaseProvider Provider { get; init; }
 
-    /// <summary>
-    /// Gets or inits the data source the database connection string.
-    /// </summary>
-    /// <value>The data source.</value>
-    public required string DataSource { get; init; }
+    public required string Database { get; init; }
 
-    /// <summary>
-    /// Gets or inits the <see cref="DatabaseProvider"/>.
-    /// </summary>
-    /// <value>The database provider.</value>
-    public DatabaseProvider Provider { get; init; } = DatabaseProvider.SQLite;
+    public string? Host { get; init; }
+
+    public string? Username { get; init; }
+
+    public string? Password { get; init; }
+
+    public int? Port { get; init; }
 }

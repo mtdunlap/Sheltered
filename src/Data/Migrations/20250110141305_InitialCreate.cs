@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using Core.Animals;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    [ExcludeFromCodeCoverage(Justification = "Generated Code")]
     public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
@@ -16,14 +15,17 @@ namespace Data.Migrations
             migrationBuilder.EnsureSchema(
                 name: "sheltered");
 
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:Enum:sheltered.animal_kind", "unspecified,dog,cat");
+
             migrationBuilder.CreateTable(
                 name: "animals",
                 schema: "sheltered",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    kind = table.Column<int>(type: "TEXT", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", maxLength: 50, nullable: true),
+                    kind = table.Column<AnimalKind>(type: "sheltered.animal_kind", nullable: false)
                 },
                 constraints: table =>
                 {

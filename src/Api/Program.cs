@@ -2,8 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Api.Configuration;
 using Api.Configuration.Databases;
 using Api.Configuration.Services;
+using Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,8 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.AddDatabases();
+var shelteredDatabaseSettings = builder.Configuration.GetRequiredSettings<ShelteredDatabaseSettings>();
+builder.Services.AddDatabase<ShelteredContext>(shelteredDatabaseSettings);
 builder.AddServices();
 
 var app = builder.Build();
@@ -21,7 +24,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.EnsureDatabasesCreatedAsync();
+    await app.EnsureDatabaseCreatedAsync<ShelteredContext>();
     app.MapOpenApi();
 }
 

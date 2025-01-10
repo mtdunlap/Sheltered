@@ -1,0 +1,59 @@
+---
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./src/Api/Dockerfile
+    depends_on:
+      - database
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Staging
+      ShelteredDatabase__Provider: npgsql
+      ShelteredDatabase__Database: sheltered
+      ShelteredDatabase__Host: database
+      ShelteredDatabase__Username: postgres_api
+      ShelteredDatabase__Password: postgres_pass
+      ShelteredDatabase__Port: 5432
+    ports:
+      - name: web
+        target: 8080
+        published: "8080"
+
+  database:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    user: postgres
+    restart: unless-stopped
+    ports:
+      - name: sql
+        target: 5432
+        published: "5432"
+    environment:
+      POSTGRES_DB: sheltered
+      POSTGRES_USER: postgres_api
+      POSTGRES_PASSWORD: postgres_pass
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        read_only: false
+
+  web:
+    build:
+      context: .
+      dockerfile: ./src/Web/Dockerfile
+    depends_on:
+      - api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Client__BaseUrl: http://api:8080/
+    ports:
+      - name: web
+        target: 8080
+        published: "8081"
+
+volumes:
+  postgres_data:
