@@ -1,0 +1,38 @@
+---
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./src/Api/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Database__DataSource: /sqlite/sheltered.db
+      Database__Provider: sqlite
+    ports:
+      - name: web
+        target: 8080
+        published: "8080"
+    volumes:
+      - type: volume
+        source: sqlitedb
+        target: /sqlite
+        read_only: false
+
+  web:
+    build:
+      context: .
+      dockerfile: ./src/Web/Dockerfile
+    depends_on:
+      - api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Client__BaseUrl: http://api:8080/
+    ports:
+      - name: web
+        target: 8080
+        published: "8081"
+
+volumes:
+  sqlitedb:
