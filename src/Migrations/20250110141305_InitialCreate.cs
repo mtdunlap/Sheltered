@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

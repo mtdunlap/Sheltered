@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace Migrations
 {
     [DbContext(typeof(ShelteredContext))]
     partial class ShelteredContextModelSnapshot : ModelSnapshot

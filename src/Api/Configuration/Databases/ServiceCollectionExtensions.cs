@@ -38,7 +38,10 @@ public static class ServiceCollectionExtensions
             DataSource = databaseSettings.Database,
             Mode = SqliteOpenMode.ReadWriteCreate
         }.ToString();
-        return services.AddDbContext<TContext>(options => options.UseSqlite(connectionString));
+        return services.AddDbContext<TContext>(options => options.UseSqlite(connectionString, sqliteOptions =>
+        {
+            sqliteOptions.MigrationsAssembly("Migrations");
+        }));
     }
 
     public static IServiceCollection AddPostgreDatabase<TContext>(this IServiceCollection services, DatabaseSettings databaseSettings) where TContext : DbContext
@@ -54,6 +57,7 @@ public static class ServiceCollectionExtensions
             }.ToString();
             return services.AddDbContext<TContext>(options => options.UseNpgsql(connectionString, npgsqlOptions =>
             {
+                npgsqlOptions.MigrationsAssembly("Migrations");
                 npgsqlOptions.MapEnum<AnimalKind>(ShelteredContext.AnimalKindEnumTypeName, ShelteredContext.Schema);
             }));
         }
@@ -69,6 +73,7 @@ public static class ServiceCollectionExtensions
             }.ToString();
             return services.AddDbContext<TContext>(options => options.UseNpgsql(connectionString, npgsqlOptions =>
             {
+                npgsqlOptions.MigrationsAssembly("Migrations");
                 npgsqlOptions.MapEnum<AnimalKind>(ShelteredContext.AnimalKindEnumTypeName, ShelteredContext.Schema);
             }));
         }
