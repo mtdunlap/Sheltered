@@ -104,7 +104,8 @@ internal abstract class BlazorPageFixture : PageTest
                 TestContext.CurrentContext.Test.ClassName,
                 TestContext.CurrentContext.Test.Name,
                 Browser.BrowserType.Name,
-                Browser.Version
+                Browser.Version,
+                "zip"
             );
         }
     }
