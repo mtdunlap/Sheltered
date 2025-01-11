@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+		<EnvironmentVariables>
+			<DEBUG></DEBUG>
+			<PWDEBUG>false</PWDEBUG>
+		</EnvironmentVariables>
+  </RunConfiguration>
+  <Playwright>
+    <BrowserName>webkit</BrowserName>
+		<ExpectTimeout>5</ExpectTimeout>
+    <LaunchOptions>
+      <Headless>true</Headless>
+      <SlowMo>0</SlowMo>
+      <Timeout>5000</Timeout>
+    </LaunchOptions>
+  </Playwright>
+</RunSettings>
