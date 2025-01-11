@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
-		<EnvironmentVariables>
-			<DEBUG></DEBUG>
-			<PWDEBUG>false</PWDEBUG>
-		</EnvironmentVariables>
+    <EnvironmentVariables>
+      <DEBUG></DEBUG>
+      <PWDEBUG>false</PWDEBUG>
+    </EnvironmentVariables>
   </RunConfiguration>
   <Playwright>
     <BrowserName>firefox</BrowserName>
-		<ExpectTimeout>5</ExpectTimeout>
+    <ExpectTimeout>5</ExpectTimeout>
     <LaunchOptions>
       <Headless>true</Headless>
       <SlowMo>0</SlowMo>
