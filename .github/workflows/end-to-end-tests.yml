@@ -27,7 +27,7 @@ jobs:
     - name: Ensure browsers are installed
       run: pwsh tests/EndToEndTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
     - name: Test
-      run: dotnet test tests/EndToEndTests --settings:tests/tests/EndToEndTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "EndToEndTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
+      run: dotnet test tests/EndToEndTests --settings:tests/EndToEndTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "EndToEndTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
     - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
