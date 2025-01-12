@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Tests.Common.Containers.Api;
 using Tests.Common.Containers.Web;
 
-namespace EndToEndTests;
+namespace EndToEndTests.Common;
 
 internal abstract class EndToEndFixture : PageTest
 {
