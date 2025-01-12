@@ -1,37 +1,56 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
-using EndToEndTests.Common;
+using Core.Animals;
 
 namespace EndToEndTests.Animals;
 
 [TestFixture]
+[TestFixtureSource(nameof(AnimalSource))]
 [NonParallelizable]
-internal sealed class CreateNewAnimalWorkflowFixture : BlazorPageFixture
+internal sealed class CreateNewAnimalWorkflowFixture(string name, AnimalKind kind) : EndToEndFixture
 {
-    [Test]
-    public async Task Should_create_a_new_animal_When_completing_the_new_animal_workflow()
+    private static IEnumerable<TestFixtureData> AnimalSource()
     {
-        Guid id = Guid.Empty;
+        yield return new TestFixtureData("Lucy", AnimalKind.Cat);
+        yield return new TestFixtureData("Jake", AnimalKind.Dog);
+    }
+
+    private Guid _id = Guid.Empty;
+
+    [Test, Order(1)]
+    public async Task Should_create_a_new_animal()
+    {
         _ = await Page.GotoAsync("animals/new", new() { WaitUntil = WaitUntilState.NetworkIdle });
 
-        await Page.GetByLabel("name").FillAsync("Lucy");
-        await Page.GetByLabel("kind").SelectOptionAsync("Cat");
+        await Page.GetByLabel("name").FillAsync(name);
+        await Page.GetByLabel("kind").SelectOptionAsync(kind.ToString());
+
         await Page.RunAndWaitForResponseAsync(async () =>
         {
             await Page.GetByRole(AriaRole.Button).ClickAsync();
         }, response =>
         {
-            return Guid.TryParse(response.Url.Split('/').Last(), out id);
-        }, new() { Timeout = 5000 });
-
-        Assert.Multiple(async () =>
-        {
-            await Expect(Page).ToHaveURLAsync($"animals/{id}", new() { Timeout = 5000 });
-            await Page.Locator("span").Filter(new() { HasText = "Lucy" }).IsVisibleAsync();
-            await Page.Locator("span").Filter(new() { HasText = "Cat" }).IsVisibleAsync();
+            var success = Guid.TryParse(response.Url.Split('/').Last(), out var guid);
+            if (success)
+            {
+                _id = guid;
+            }
+            return success;
         });
+
+        await Assertions.Expect(Page).ToHaveURLAsync($"animals/{_id}");
+    }
+
+    [Test, Order(2)]
+    public async Task Should_find_the_newly_created_animal()
+    {
+        _ = await Page.GotoAsync($"animals/{_id}", new() { WaitUntil = WaitUntilState.NetworkIdle });
+
+        await Assertions.Expect(Page.Locator("span").Filter(new() { HasText = name })).ToHaveTextAsync(name);
+        await Assertions.Expect(Page.Locator("span").Filter(new() { HasText = kind.ToString() })).ToHaveTextAsync(kind.ToString());
     }
 }
