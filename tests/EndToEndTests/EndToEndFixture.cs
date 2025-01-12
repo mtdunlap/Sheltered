@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading.Tasks;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Networks;
@@ -11,6 +12,17 @@ namespace EndToEndTests;
 
 internal abstract class EndToEndFixture : PageTest
 {
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        return new()
+        {
+            BaseURL = _web.BaseAddress.ToString(),
+            IgnoreHTTPSErrors = true,
+            Locale = "en-US",
+            ColorScheme = ColorScheme.Dark
+        };
+    }
+
     private INetwork _network = null!;
     protected ApiContainer _api = null!;
     protected WebContainer _web = null!;
@@ -32,14 +44,78 @@ internal abstract class EndToEndFixture : PageTest
         await _network.DisposeAsync();
     }
 
-    public override BrowserNewContextOptions ContextOptions()
+    [SetUp]
+    public async Task TraceSetUp()
     {
-        return new()
+        await StartTraceAsync();
+    }
+
+    [TearDown]
+    public async Task TraceTearDown()
+    {
+        if (IsFailed)
         {
-            BaseURL = _web.BaseAddress.ToString(),
-            IgnoreHTTPSErrors = true,
-            Locale = "en-US",
-            ColorScheme = ColorScheme.Dark
-        };
+            await StopAndSaveTraceAsync(TracePath);
+        }
+        else
+        {
+            await StopTraceAsync();
+        }
+    }
+
+    private async Task StartTraceAsync()
+    {
+        await Context.Tracing.StartAsync(new()
+        {
+            Title = TraceTitle,
+            Screenshots = true,
+            Snapshots = true,
+            Sources = true
+        });
+    }
+
+    private async Task StopTraceAsync()
+    {
+        await Context.Tracing.StopAsync();
+    }
+
+    private async Task StopAndSaveTraceAsync(string path)
+    {
+        await Context.Tracing.StopAsync(new()
+        {
+            Path = path,
+        });
+    }
+
+    private static bool IsFailed
+    {
+        get
+        {
+            return TestContext.CurrentContext.Result.Outcome == NUnit.Framework.Interfaces.ResultState.Error
+                || TestContext.CurrentContext.Result.Outcome == NUnit.Framework.Interfaces.ResultState.Failure;
+        }
+    }
+
+    private string TracePath
+    {
+        get
+        {
+            return Path.Combine(TestContext.CurrentContext.WorkDirectory, TraceDirectoryName, TraceTitle);
+        }
+    }
+
+    private const string TraceDirectoryName = "playwright-traces";
+
+    private string TraceTitle
+    {
+        get
+        {
+            return string.Join('.',
+                TestContext.CurrentContext.Test.ClassName,
+                TestContext.CurrentContext.Test.Name,
+                Browser.BrowserType.Name,
+                Browser.Version
+            );
+        }
     }
 }
