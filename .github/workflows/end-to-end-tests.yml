@@ -25,6 +25,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Ensure browsers are installed
+      timeout-minutes: 5
       run: pwsh tests/EndToEndTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
     - name: Test
       run: dotnet test tests/EndToEndTests --settings:tests/EndToEndTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "EndToEndTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
