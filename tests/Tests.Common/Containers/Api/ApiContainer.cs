@@ -70,7 +70,7 @@ public sealed class ApiContainer : IAsyncDisposable
     /// Asynchronously build the api image, creates the network, and runs the api container.
     /// </summary>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task StartAsync()
+    public async Task BuildAsync()
     {
         await Image.StartAsync().ConfigureAwait(false);
 
