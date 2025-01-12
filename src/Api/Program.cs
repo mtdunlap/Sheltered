@@ -17,6 +17,11 @@ namespace Api;
 [ExcludeFromCodeCoverage]
 public sealed class Program
 {
+    /// <summary>
+    /// Asynchronously builds and runs the web api and blocks the calling thread until host shutdown.
+    /// </summary>
+    /// <param name="args">The arguments to use when building the web api.</param>
+    /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
