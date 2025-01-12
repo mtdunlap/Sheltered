@@ -10,7 +10,7 @@ namespace Tests.Common.Containers.Api;
 /// <summary>
 /// A test container image for the api.
 /// </summary>
-public sealed class ApiImage : IImage
+public sealed class ApiImage : IImage, IAsyncDisposable
 {
     /// <summary>
     /// The http port to which the api will internally bind.
@@ -52,7 +52,7 @@ public sealed class ApiImage : IImage
     }
 
     /// <inheritdoc/>
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await Task.CompletedTask;
     }
