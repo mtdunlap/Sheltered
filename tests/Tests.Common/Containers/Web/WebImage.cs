@@ -29,7 +29,7 @@ public sealed class WebImage : IImage, IAsyncDisposable
     /// be built multiple times concurrently.
     /// </remarks>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task StartAsync()
+    public async Task BuildAsync()
     {
         await _semaphoreSlim.WaitAsync().ConfigureAwait(false);
 
