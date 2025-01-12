@@ -10,7 +10,7 @@ namespace Tests.Common.Containers.Web;
 /// <summary>
 /// A test container image for the web server.
 /// </summary>
-public sealed class WebImage : IImage
+public sealed class WebImage : IImage, IAsyncDisposable
 {
     /// <summary>
     /// The http port to which the web server will internally bind.
@@ -52,7 +52,7 @@ public sealed class WebImage : IImage
     }
 
     /// <inheritdoc/>
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await Task.CompletedTask;
     }
