@@ -72,7 +72,7 @@ public sealed class ApiContainer : IAsyncDisposable
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task StartAsync()
     {
-        await Image.StartAsync().ConfigureAwait(false);
+        await Image.BuildAsync().ConfigureAwait(false);
 
         await _network.CreateAsync().ConfigureAwait(false);
 
