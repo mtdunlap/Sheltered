@@ -58,7 +58,7 @@ public sealed class ApiContainer : IAsyncDisposable
     /// <summary>
     /// A base <see cref="Uri"/> for accessing the api container from another container on the same network.
     /// </summary>
-    public Uri SharedNetworkAddress
+    public static Uri SharedNetworkAddress
     {
         get
         {
