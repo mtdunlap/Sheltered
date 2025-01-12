@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using Core.Animals;
+using EndToEndTests.Common;
 
 namespace EndToEndTests.Animals;
 
