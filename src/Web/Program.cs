@@ -16,6 +16,10 @@ namespace Web;
 [ExcludeFromCodeCoverage]
 public sealed class Program
 {
+    /// <summary>
+    /// Builds and runs the web server and blocks the calling thread until host shutdown.
+    /// </summary>
+    /// <param name="args">The arguments to use when building the web server.</param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
