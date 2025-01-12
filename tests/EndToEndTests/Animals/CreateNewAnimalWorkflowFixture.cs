@@ -43,7 +43,7 @@ internal sealed class CreateNewAnimalWorkflowFixture(string name, AnimalKind kin
             return success;
         });
 
-        await Assertions.Expect(Page).ToHaveURLAsync($"animals/{_id}");
+        await Expect(Page).ToHaveURLAsync($"animals/{_id}");
     }
 
     [Test, Order(2)]
@@ -51,7 +51,7 @@ internal sealed class CreateNewAnimalWorkflowFixture(string name, AnimalKind kin
     {
         _ = await Page.GotoAsync($"animals/{_id}", new() { WaitUntil = WaitUntilState.NetworkIdle });
 
-        await Assertions.Expect(Page.Locator("span").Filter(new() { HasText = name })).ToHaveTextAsync(name);
-        await Assertions.Expect(Page.Locator("span").Filter(new() { HasText = kind.ToString() })).ToHaveTextAsync(kind.ToString());
+        await Expect(Page.Locator("span").Filter(new() { HasText = name })).ToHaveTextAsync(name);
+        await Expect(Page.Locator("span").Filter(new() { HasText = kind.ToString() })).ToHaveTextAsync(kind.ToString());
     }
 }
