@@ -32,7 +32,7 @@ internal abstract class EndToEndFixture : PageTest
     {
         _network = new NetworkBuilder().Build();
         _api = new ApiContainer(_network);
-        _web = new WebContainer(_network, _api.SharedNetworkAddress);
+        _web = new WebContainer(_network, ApiContainer.SharedNetworkAddress);
         await Task.WhenAll(_api.StartAsync(), _web.StartAsync());
     }
 
