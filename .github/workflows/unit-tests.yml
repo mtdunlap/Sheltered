@@ -1,5 +1,8 @@
 name: Unit Tests
 
+permissions:
+  pull-requests: write
+
 on:
   pull_request:
     branches: [ "main" ]
