@@ -1,0 +1,33 @@
+name: Api Integration Tests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.x' ]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test tests/Api.IntegrationTests --no-build --verbosity normal --logger trx --results-directory "ApiIntegrationTestResults-${{ matrix.dotnet-version }}"
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-integration-test-results-${{ matrix.dotnet-version }}
+        path: ApiIntegrationTestResults-${{ matrix.dotnet-version }}
+      if: ${{ always() }}
