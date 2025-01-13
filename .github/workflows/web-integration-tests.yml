@@ -59,8 +59,8 @@ jobs:
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: web-integration-test-results-${{ matrix.dotnet-version }}
-        path: TestResults/${{ matrix.dotnet-version }}
+        name: web-integration-test-results-${{ matrix.dotnet-version }}-${{ matrix.browser }}
+        path: TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}
       if: ${{ always() }}
 
     - name: Add Coverage PR Comment
