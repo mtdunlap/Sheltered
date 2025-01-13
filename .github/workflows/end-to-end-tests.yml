@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: end-to-end-test-results-${{ matrix.dotnet-version }}-${{ matrix.browser }}
-        path: "TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}"
+        path: TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}
       if: ${{ always() }}
 
     - name: Upload playwright trace results
