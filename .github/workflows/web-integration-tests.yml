@@ -1,5 +1,8 @@
 name: Web Integration Tests
 
+permissions:
+  pull-requests: write
+
 on:
   pull_request:
     branches: [ "main" ]
@@ -11,26 +14,59 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: [ '9.x' ]
+        dotnet-version: [ "9.x" ]
         browser: [ "chromium", "firefox", "webkit" ]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dotnet
+    
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
+    
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Build
       run: dotnet build --no-restore
+    
     - name: Ensure browsers are installed
-      run: pwsh tests/Web.IntegrationTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
-    - name: Test
-      run: dotnet test tests/Web.IntegrationTests --settings:tests/Web.IntegrationTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "WebIntegrationTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}"
+      run: pwsh tests/Web.IntegrationTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}  
+
+    - name: Test with Code Coverage
+      run: dotnet test tests/Web.IntegrationTests --settings:tests/Web.IntegrationTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}"
+
+    - name: Install report generator tool
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Combine code coverage reports
+      run: reportgenerator -reports:TestResults/${{ matrix.dotnet-version }}/**/coverage.cobertura.xml -targetdir:TestResults/${{ matrix.dotnet-version }} -reporttypes:Cobertura
+
+    - name: Generate Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: "TestResults/${{ matrix.dotnet-version }}/Cobertura.xml"
+        badge: true
+        fail_below_min: false
+        format: markdown
+        hide_branch_rate: true
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: "30 50"
+
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: dotnet-web-integration-test-results-${{ matrix.browser }}-${{ matrix.dotnet-version }}
-        path: WebIntegrationTestResults-${{ matrix.browser }}-${{ matrix.dotnet-version }}
+        name: web-integration-test-results-${{ matrix.dotnet-version }}
+        path: TestResults/${{ matrix.dotnet-version }}
       if: ${{ always() }}
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        message: Web Integration Tests Code Coverage
+        recreate: true
+        path: code-coverage-results.md
