@@ -28,7 +28,7 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test with Code Coverage
-      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}"
+      run: dotnet test --no-build --filter Category=UnitTestAssembly --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}"
 
     - name: Generate Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
