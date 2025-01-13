@@ -31,7 +31,7 @@ jobs:
       run: dotnet build --no-restore
     
     - name: Test with Code Coverage
-      run: dotnet test --no-build --filter Category=IntegrationTestAssembly --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}"
+      run: dotnet test tests/Api.IntegrationTests --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}"
 
     - name: Install report generator tool
       run: dotnet tool install --global dotnet-reportgenerator-globaltool
@@ -55,7 +55,7 @@ jobs:
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: integration-test-results-${{ matrix.dotnet-version }}
+        name: api-integration-test-results-${{ matrix.dotnet-version }}
         path: TestResults/${{ matrix.dotnet-version }}
       if: ${{ always() }}
 
