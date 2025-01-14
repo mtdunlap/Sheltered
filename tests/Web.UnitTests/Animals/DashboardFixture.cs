@@ -202,7 +202,8 @@ internal sealed class DashboardFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
@@ -234,7 +235,8 @@ internal sealed class DashboardFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
@@ -265,7 +267,8 @@ internal sealed class DashboardFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
@@ -304,19 +307,22 @@ internal sealed class DashboardFixture
         var lucyTheCat = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
 
         var jakeTheDog = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
 
         var neekoTheCat = new AnimalModel
         {
             Name = "Neeko",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
@@ -348,19 +354,22 @@ internal sealed class DashboardFixture
         var lucyTheCat = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
 
         var jakeTheDog = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
 
         var neekoTheCat = new AnimalModel
         {
             Name = "Neeko",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())
@@ -395,19 +404,22 @@ internal sealed class DashboardFixture
         var lucyTheCat = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var jakesId = Guid.NewGuid();
         var jakeTheDog = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
         var neekosId = Guid.NewGuid();
         var neekoTheCat = new AnimalModel
         {
             Name = "Neeko",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredClient
             .ListAnimalsAsync(Arg.Any<CancellationToken>())

@@ -121,7 +121,8 @@ internal sealed class AnimalControllerFixture
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var shelteredRepository = Substitute.For<IShelteredRepository>();
         shelteredRepository
@@ -131,7 +132,8 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
@@ -169,7 +171,8 @@ internal sealed class AnimalControllerFixture
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animals = new List<AnimalEntity>
         {
@@ -183,7 +186,8 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
@@ -220,14 +224,16 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var cancellationToken = CancellationTokenSource.Token;
 
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
@@ -246,7 +252,8 @@ internal sealed class AnimalControllerFixture
         var createdEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredRepository
             .GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
@@ -288,14 +295,16 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var cancellationToken = CancellationTokenSource.Token;
 
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
@@ -314,7 +323,8 @@ internal sealed class AnimalControllerFixture
         var createdEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         shelteredRepository
             .GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
@@ -323,7 +333,8 @@ internal sealed class AnimalControllerFixture
         var createdModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         animalMapper
             .Map(Arg.Is(createdEntity))
@@ -372,7 +383,8 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var cancellationToken = CancellationTokenSource.Token;
 
@@ -407,14 +419,16 @@ internal sealed class AnimalControllerFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Female
         };
         var cancellationToken = CancellationTokenSource.Token;
 
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var shelteredRepository = Substitute.For<IShelteredRepository>();
         shelteredRepository
@@ -465,7 +479,8 @@ internal sealed class AnimalControllerFixture
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var shelteredRepository = Substitute.For<IShelteredRepository>();
         shelteredRepository
@@ -500,7 +515,8 @@ internal sealed class AnimalControllerFixture
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var shelteredRepository = Substitute.For<IShelteredRepository>();
         shelteredRepository

@@ -126,6 +126,8 @@ internal sealed class AnimalDetailFixture
                         <span></span>
                         <label>Kind</label>
                         <span></span>
+                        <label>Sex</label>
+                        <span></span>
                     </div>
                 ");
             }, Throws.Nothing);
@@ -141,7 +143,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -181,7 +184,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -221,7 +225,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -254,6 +259,8 @@ internal sealed class AnimalDetailFixture
                         <span>Lucy</span>
                         <label>Kind</label>
                         <span>Cat</span>
+                        <label>Sex</label>
+                        <span>Female</span>
                     </div>
                     <button id=""updateButton"" class=""btn btn-primary"">Update Animal</button>
                     <button id=""deleteButton"" class=""btn btn-primary"">Delete Animal</button>
@@ -271,7 +278,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -315,7 +323,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -362,6 +371,8 @@ internal sealed class AnimalDetailFixture
                         <span>Lucy</span>
                         <label>Kind</label>
                         <span>Cat</span>
+                        <label>Sex</label>
+                        <span>Female</span>
                     </div>
                     <button id=""updateButton"" class=""btn btn-primary"">Update Animal</button>
                     <button id=""deleteButton"" class=""btn btn-primary"">Delete Animal</button>
@@ -380,7 +391,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -427,6 +439,8 @@ internal sealed class AnimalDetailFixture
                         <span>Lucy</span>
                         <label>Kind</label>
                         <span>Cat</span>
+                        <label>Sex</label>
+                        <span>Female</span>
                     </div>
                     <button id=""updateButton"" class=""btn btn-primary"">Update Animal</button>
                     <button id=""deleteButton"" class=""btn btn-primary"">Delete Animal</button>
@@ -445,7 +459,8 @@ internal sealed class AnimalDetailFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient

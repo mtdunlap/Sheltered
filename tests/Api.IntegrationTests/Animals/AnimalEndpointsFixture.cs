@@ -41,7 +41,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
             var animalEntity = new AnimalEntity
             {
                 Name = "Lucy",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             _ = await shelteredContext.AddAsync(animalEntity, cancellationTokenSource.Token);
@@ -63,7 +64,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
 
         var (created, id) = await shelteredClient.CreateAnimalAsync(animalModel, cancellationTokenSource.Token);
@@ -107,7 +109,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
             var animalEntity = new AnimalEntity
             {
                 Name = "Lucy",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             _ = await shelteredContext.AddAsync(animalEntity, cancellationTokenSource.Token);
@@ -156,7 +159,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
             var animalEntity = new AnimalEntity
             {
                 Name = "Lucy",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             _ = await shelteredContext.AddAsync(animalEntity, cancellationTokenSource.Token);
@@ -166,7 +170,7 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
 
         var actual = await shelteredClient.GetAnimalByIdAsync(id, cancellationTokenSource.Token);
 
-        Assert.That(actual, Is.EqualTo(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat }));
+        Assert.That(actual, Is.EqualTo(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female }));
     }
 
     [Test]
@@ -194,19 +198,22 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
             var lucyTheCat = new AnimalEntity
             {
                 Name = "Lucy",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             var jakeTheDog = new AnimalEntity
             {
                 Name = "Jake",
-                Kind = AnimalKind.Dog
+                Kind = AnimalKind.Dog,
+                Sex = AnimalSex.Female
             };
 
             var neekoTheCat = new AnimalEntity
             {
                 Name = "Neeko",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             await shelteredContext.AddRangeAsync([lucyTheCat, jakeTheDog, neekoTheCat], cancellationTokenSource.Token);
@@ -254,7 +261,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
 
         var actual = await shelteredClient.UpdateAnimalByIdAsync(id, animalModel, cancellationTokenSource.Token);
@@ -280,7 +288,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
             var animalEntity = new AnimalEntity
             {
                 Name = "Lucy",
-                Kind = AnimalKind.Cat
+                Kind = AnimalKind.Cat,
+                Sex = AnimalSex.Female
             };
 
             _ = await shelteredContext.AddAsync(animalEntity, cancellationTokenSource.Token);
@@ -291,7 +300,8 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
         var animalModel = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Female
         };
 
         var actual = await shelteredClient.UpdateAnimalByIdAsync(id, animalModel, cancellationTokenSource.Token);

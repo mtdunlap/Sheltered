@@ -15,7 +15,8 @@ internal sealed class AnimalPreviewFixture
         yield return new TestCaseData(new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         },
         @"
             <div>
@@ -23,13 +24,16 @@ internal sealed class AnimalPreviewFixture
                 <span>Lucy</span>
                 <label>Kind</label>
                 <span>Cat</span>
+                <label>Sex</label>
+                <span>Female</span>
             </div>
         "
         );
         yield return new TestCaseData(new AnimalModel
         {
             Name = "Neeko",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         },
         @"
             <div>
@@ -37,13 +41,16 @@ internal sealed class AnimalPreviewFixture
                 <span>Neeko</span>
                 <label>Kind</label>
                 <span>Cat</span>
+                <label>Sex</label>
+                <span>Female</span>
             </div>
         "
         );
         yield return new TestCaseData(new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         },
         @"
             <div>
@@ -51,6 +58,8 @@ internal sealed class AnimalPreviewFixture
                 <span>Jake</span>
                 <label>Kind</label>
                 <span>Dog</span>
+                <label>Sex</label>
+                <span>Male</span>
             </div>
         "
         );

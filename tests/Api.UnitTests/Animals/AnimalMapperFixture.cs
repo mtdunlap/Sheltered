@@ -13,8 +13,8 @@ internal sealed class AnimalMapperFixture
 {
     private static IEnumerable<TestCaseData> CreateTestCaseSource()
     {
-        yield return new TestCaseData(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat })
-            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat });
+        yield return new TestCaseData(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
+            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
     }
 
     [Test, TestCaseSource(nameof(CreateTestCaseSource))]
@@ -27,8 +27,8 @@ internal sealed class AnimalMapperFixture
 
     private static IEnumerable<TestCaseData> MapTestCaseSource()
     {
-        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat })
-            .Returns(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat });
+        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
+            .Returns(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
     }
 
     [Test, TestCaseSource(nameof(MapTestCaseSource))]
@@ -41,8 +41,8 @@ internal sealed class AnimalMapperFixture
 
     private static IEnumerable<TestCaseData> UpdateTestCaseSource()
     {
-        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Dog }, new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat })
-            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat });
+        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Dog, Sex = AnimalSex.Female }, new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
+            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
     }
 
     [Test, TestCaseSource(nameof(UpdateTestCaseSource))]

@@ -24,7 +24,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await repository.AddAnimalAsync(animalEntity, CancellationToken);
         await repository.SaveChangesAsync(CancellationToken);
@@ -55,7 +56,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await Context.AddAsync(animalEntity, CancellationToken);
         await Context.SaveChangesAsync(CancellationToken);
@@ -82,7 +84,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await Context.AddAsync(animalEntity, CancellationToken);
         await Context.SaveChangesAsync(CancellationToken);
@@ -100,7 +103,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var animalEntities = new List<AnimalEntity>
         {
@@ -122,7 +126,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         var repository = new ShelteredRepository(Context);
 
@@ -140,7 +145,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await Context.AddAsync(animalEntity, CancellationToken);
         await Context.SaveChangesAsync(CancellationToken);
@@ -159,7 +165,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await Context.AddAsync(animalEntity, CancellationToken);
 
@@ -182,7 +189,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
 
         var repository = new ShelteredRepository(Context);
@@ -203,7 +211,8 @@ internal sealed class ShelteredRepositoryFixture(IDbContextOptionsFactory dbCont
         var animalEntity = new AnimalEntity
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         await Context.AddAsync(animalEntity, CancellationToken);
         await Context.SaveChangesAsync(CancellationToken);
