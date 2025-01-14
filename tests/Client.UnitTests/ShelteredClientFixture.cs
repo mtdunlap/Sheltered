@@ -158,7 +158,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -190,7 +191,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -222,7 +224,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -257,7 +260,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -292,7 +296,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -326,7 +331,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -540,7 +546,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -571,7 +578,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -666,7 +674,8 @@ public sealed class ShelteredClientFixture
                 new()
                 {
                     Name = "Lucy",
-                    Kind = AnimalKind.Cat
+                    Kind = AnimalKind.Cat,
+                    Sex = AnimalSex.Female
                 }
             }
         };
@@ -703,7 +712,8 @@ public sealed class ShelteredClientFixture
                 new()
                 {
                     Name = "Lucy",
-                    Kind = AnimalKind.Cat
+                    Kind = AnimalKind.Cat,
+                    Sex = AnimalSex.Female
                 }
             }
         };
@@ -743,7 +753,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -783,7 +794,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -815,7 +827,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -846,7 +859,8 @@ public sealed class ShelteredClientFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler

@@ -44,7 +44,7 @@ internal sealed class DashboardPageFixture : BlazorPageFixture
     public async Task Should_navigate_to_the_animal_detail_page_When_the_animal_preview_link_is_clicked()
     {
         var lucysId = Guid.NewGuid();
-        var lucyTheCat = new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat };
+        var lucyTheCat = new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female };
         MockApi
             .Given(
                 Request.Create()

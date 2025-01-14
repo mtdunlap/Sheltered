@@ -182,7 +182,8 @@ internal sealed class UpdateAnimalFixture
         var animalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -228,6 +229,8 @@ internal sealed class UpdateAnimalFixture
                         <span>Lucy</span>
                         <label>Current Kind</label>
                         <span>Cat</span>
+                        <label>Current Sex</label>
+                        <span>Female</span>
                     </div>
                     <div>
                         <label for=""name"">New Name</label>
@@ -237,6 +240,12 @@ internal sealed class UpdateAnimalFixture
                             <option value=""Unspecified"" selected="""">Unspecified</option>
                             <option value=""Dog"">Dog</option>
                             <option value=""Cat"">Cat</option>
+                        </select>
+                        <label for=""sex"">New Sex</label>
+                        <select id=""sex"" name=""Sex"" value=""Unknown""  >
+                            <option value=""Unknown"" selected="""">Unknown</option>
+                            <option value=""Male"">Male</option>
+                            <option value=""Female"">Female</option>
                         </select>
                         <button class=""btn btn-primary"">Submit</button>
                     </div>
@@ -254,7 +263,8 @@ internal sealed class UpdateAnimalFixture
         var initialAnimalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -264,7 +274,8 @@ internal sealed class UpdateAnimalFixture
         var updateAnimalModel = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
         shelteredClient
             .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
@@ -284,8 +295,10 @@ internal sealed class UpdateAnimalFixture
 
         var input = newAnimalPage.Find("input");
         input.Change("Jake");
-        var select = newAnimalPage.Find("select");
-        select.Change("Dog");
+        var selectKind = newAnimalPage.Find("#kind");
+        selectKind.Change("Dog");
+        var selectSex = newAnimalPage.Find("#sex");
+        selectSex.Change("Male");
 
         var button = newAnimalPage.Find("button");
         button.Click();
@@ -308,29 +321,38 @@ internal sealed class UpdateAnimalFixture
             }, Throws.Nothing);
             Assert.That(navigationManager.History, Is.Empty);
             Assert.That(pageTitle.Markup, Is.EqualTo("Update"));
-            Assert.That(() =>
-            {
-                newAnimalPage.MarkupMatches(@"
+            newAnimalPage.MarkupMatches(@"
                     <h1>Update Animal</h1>
                     <div>
-                        <label>Current Name</label>
-                        <span>Lucy</span>
-                        <label>Current Kind</label>
-                        <span>Cat</span>
+                    <label>Current Name</label>
+                    <span>Lucy</span>
+                    <label>Current Kind</label>
+                    <span>Cat</span>
+                    <label>Current Sex</label>
+                    <span>Female</span>
                     </div>
                     <div>
-                        <label for=""name"">New Name</label>
-                        <input id=""name"" name=""Name"" value=""Jake""/>
-                        <label for=""kind"">New Kind</label>
-                        <select id=""kind"" name=""Kind"" value=""Dog"">
-                            <option value=""Unspecified"">Unspecified</option>
-                            <option value=""Dog"" selected="""">Dog</option>
-                            <option value=""Cat"">Cat</option>
-                        </select>
-                        <button class=""btn btn-primary"">Submit</button>
-                        <div>An unknown error occurred, please try again momentarily.</div>
+                    <label for=""name"">New Name</label>
+                    <input id=""name"" name=""Name"" value=""Jake""  >
+                    <label for=""kind"">New Kind</label>
+                    <select id=""kind"" name=""Kind"" value=""Dog""  >
+                        <option value=""Unspecified"">Unspecified</option>
+                        <option value=""Dog"" selected="""">Dog</option>
+                        <option value=""Cat"">Cat</option>
+                    </select>
+                    <label for=""sex"">New Sex</label>
+                    <select id=""sex"" name=""Sex"" value=""Male""  >
+                        <option value=""Unknown"">Unknown</option>
+                        <option value=""Male"" selected="""">Male</option>
+                        <option value=""Female"">Female</option>
+                    </select>
+                    <button class=""btn btn-primary"" >Submit</button>
+                    <div>An unknown error occurred, please try again momentarily.</div>
                     </div>
                 ");
+            Assert.That(() =>
+            {
+
             }, Throws.Nothing);
         });
     }
@@ -344,7 +366,8 @@ internal sealed class UpdateAnimalFixture
         var initialAnimalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -354,7 +377,8 @@ internal sealed class UpdateAnimalFixture
         var updateAnimalModel = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
         shelteredClient
             .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
@@ -374,8 +398,10 @@ internal sealed class UpdateAnimalFixture
 
         var input = newAnimalPage.Find("input");
         input.Change("Jake");
-        var select = newAnimalPage.Find("select");
-        select.Change("Dog");
+        var selectKind = newAnimalPage.Find("#kind");
+        selectKind.Change("Dog");
+        var selectSex = newAnimalPage.Find("#sex");
+        selectSex.Change("Male");
 
         var button = newAnimalPage.Find("button");
         button.Click();
@@ -407,6 +433,8 @@ internal sealed class UpdateAnimalFixture
                         <span>Lucy</span>
                         <label>Current Kind</label>
                         <span>Cat</span>
+                        <label>Current Sex</label>
+                        <span>Female</span>
                     </div>
                     <div>
                         <label for=""name"">New Name</label>
@@ -417,9 +445,15 @@ internal sealed class UpdateAnimalFixture
                             <option value=""Dog"" selected="""">Dog</option>
                             <option value=""Cat"">Cat</option>
                         </select>
-                        <button class=""btn btn-primary"">Submit</button>
-                        <div>The animal could not be updated as it does not exist.</div>
-                    </div>
+                        <label for=""sex"">New Sex</label>
+                        <select id=""sex"" name=""Sex"" value=""Male""  >
+                            <option value=""Unknown"">Unknown</option>
+                            <option value=""Male"" selected="""">Male</option>
+                            <option value=""Female"">Female</option>
+                        </select>
+                            <button class=""btn btn-primary"">Submit</button>
+                            <div>The animal could not be updated as it does not exist.</div>
+                        </div>
                 ");
             }, Throws.Nothing);
         });
@@ -434,7 +468,8 @@ internal sealed class UpdateAnimalFixture
         var initialAnimalModel = new AnimalModel
         {
             Name = "Lucy",
-            Kind = AnimalKind.Cat
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
         };
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
@@ -444,7 +479,8 @@ internal sealed class UpdateAnimalFixture
         var updateAnimalModel = new AnimalModel
         {
             Name = "Jake",
-            Kind = AnimalKind.Dog
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male
         };
         shelteredClient
             .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
@@ -464,8 +500,10 @@ internal sealed class UpdateAnimalFixture
 
         var input = newAnimalPage.Find("input");
         input.Change("Jake");
-        var select = newAnimalPage.Find("select");
-        select.Change("Dog");
+        var selectKind = newAnimalPage.Find("#kind");
+        selectKind.Change("Dog");
+        var selectSex = newAnimalPage.Find("#sex");
+        selectSex.Change("Male");
 
         var button = newAnimalPage.Find("button");
         button.Click();
