@@ -1,0 +1,67 @@
+name: Unit Tests
+
+permissions:
+  pull-requests: write
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ "9.x" ]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore
+    
+    - name: Test with Code Coverage
+      run: dotnet test --no-build --filter Category=UnitTestAssembly --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}"
+
+    - name: Install report generator tool
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Combine code coverage reports
+      run: reportgenerator -reports:TestResults/${{ matrix.dotnet-version }}/**/coverage.cobertura.xml -targetdir:TestResults/${{ matrix.dotnet-version }} -reporttypes:Cobertura
+
+    - name: Generate Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: "TestResults/${{ matrix.dotnet-version }}/Cobertura.xml"
+        badge: true
+        fail_below_min: true
+        format: markdown
+        hide_branch_rate: true
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: "60 80"
+
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: unit-test-results-${{ matrix.dotnet-version }}
+        path: TestResults/${{ matrix.dotnet-version }}
+      if: ${{ always() }}
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md

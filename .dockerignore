@@ -1,0 +1,8 @@
+.github/
+.vscode/
+.gitattributes
+.gitignore
+README.md
+bin/
+obj/
+tests/

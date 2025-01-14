@@ -1,0 +1,53 @@
+name: End to End Tests
+
+permissions:
+  pull-requests: write
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ "9.x" ]
+        browser: [ "chromium", "firefox", "webkit" ]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore
+    
+    - name: Ensure browsers are installed
+      run: pwsh tests/EndToEndTests/bin/Debug/net9.0/playwright.ps1 install --with-deps ${{ matrix.browser }}  
+
+    - name: Test
+      run: dotnet test tests/EndToEndTests --settings:tests/EndToEndTests/${{ matrix.browser }}.runsettings --no-build --verbosity normal --logger trx --results-directory "TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}"
+
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: end-to-end-test-results-${{ matrix.dotnet-version }}-${{ matrix.browser }}
+        path: TestResults/${{ matrix.dotnet-version }}/${{ matrix.browser }}
+      if: ${{ always() }}
+
+    - name: Upload playwright trace results
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-traces-${{ matrix.browser }}-${{ matrix.dotnet-version }}
+        path: tests/EndToEndTests/bin/Debug/net9.0/playwright-traces
+        if-no-files-found: ignore
+      if: ${{ always() }}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <DEBUG></DEBUG>
+      <PWDEBUG>false</PWDEBUG>
+    </EnvironmentVariables>
+  </RunConfiguration>
+  <Playwright>
+    <BrowserName>chromium</BrowserName>
+    <ExpectTimeout>5</ExpectTimeout>
+    <LaunchOptions>
+      <Channel>msedge</Channel>
+      <Headless>true</Headless>
+      <SlowMo>0</SlowMo>
+      <Timeout>5000</Timeout>
+    </LaunchOptions>
+  </Playwright>
+</RunSettings>
