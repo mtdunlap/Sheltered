@@ -16,6 +16,12 @@ public sealed class AnimalEntityConfiguration : EntityConfiguration<AnimalEntity
     {
         builder.ToTable(TableName, schema: ShelteredContext.Schema);
 
+        builder
+            .HasMany(animalEntity => animalEntity.Images)
+            .WithOne(animalImageEntity => animalImageEntity.Animal)
+            .HasForeignKey(animalImageEntity => animalImageEntity.AnimalId)
+            .IsRequired(true);
+
         ConfigureId(builder);
         ConfigureName(builder);
         ConfigureKind(builder);

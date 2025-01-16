@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Core.Animals;
 using Data.Common;
@@ -27,4 +28,10 @@ public sealed record class AnimalEntity : Entity
     /// </summary>
     /// <value>The sex of the animal.</value>
     public required AnimalSex Sex { get; set; }
+
+    /// <summary>
+    /// Gets or sets a <see cref="List{AnimalImageEntity}"/> of <see cref="AnimalImageEntity"/>s.
+    /// </summary>
+    /// <value>The list of images of the animal.</value>
+    public List<AnimalImageEntity> Images { get; set; } = [];
 }
