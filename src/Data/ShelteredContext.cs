@@ -10,6 +10,11 @@ namespace Data;
 public sealed class ShelteredContext(DbContextOptions dbContextOptions) : DbContext(dbContextOptions)
 {
     /// <summary>
+    /// The name of the schema the <see cref="ShelteredContext"/> represents.
+    /// </summary>
+    public const string Schema = "sheltered";
+
+    /// <summary>
     /// Gets or inits the <see cref="DbSet{AnimalEntity}"/> of <see cref="AnimalEntity"/>.
     /// </summary>
     /// <value>Represents the animals table of the sheltered database.</value>
