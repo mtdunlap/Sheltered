@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Core.Animals;
 using Data.Common;
 
@@ -6,6 +7,7 @@ namespace Data.Animals;
 /// <summary>
 /// Represents an entity for an animal.
 /// </summary>
+[EntityTypeConfiguration(typeof(AnimalEntityConfiguration))]
 public sealed record class AnimalEntity : Entity
 {
     /// <summary>
