@@ -1,29 +1,13 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
 using Core.Animals;
+using Data.Common;
 
 namespace Data.Animals;
 
 /// <summary>
 /// Represents an entity for an animal.
 /// </summary>
-public sealed record class AnimalEntity
+public sealed record class AnimalEntity : Entity
 {
-    /// <summary>
-    /// Gets or inits the id of the animal.
-    /// </summary>
-    /// <remarks>
-    /// The Id is not intended to be set/init by users, but is necessary so that EF Core can set the Id.
-    /// </remarks>
-    /// <value>The id of the animal.</value>
-    public Guid Id
-    {
-        get;
-
-        [ExcludeFromCodeCoverage(Justification = "Cannot test a private initter.")]
-        private init;
-    } = Guid.Empty;
-
     /// <summary>
     /// Gets or sets the name of the animal. May be null.
     /// </summary>
