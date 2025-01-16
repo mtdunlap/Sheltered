@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Core.Animals;
@@ -35,4 +36,11 @@ public sealed record class AnimalModel
     [JsonPropertyName("sex")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public required AnimalSex Sex { get; init; } = AnimalSex.Unknown;
+
+    /// <summary>
+    /// Gets or inits the <see cref="List{AnimalImageModel}"/> of <see cref="AnimalImageModel"/>s.
+    /// </summary>
+    /// <value>A <see cref="List{AnimalImageModel}"/> of images of the animal.</value>
+    [JsonPropertyName("images")]
+    public List<AnimalImageModel> Images { get; init; } = [];
 }
