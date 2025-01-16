@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Api.Common;
 using Client.Animals;
 using Data;
 using Data.Animals;
@@ -18,9 +20,11 @@ namespace Api.Animals;
 /// </summary>
 /// <param name="shelteredRepository">An <see cref="IShelteredRepository"/> to access the sheltered database.</param>
 /// <param name="animalMapper">An <see cref="IAnimalMapper"/> to map between <see cref="AnimalModel"/>s and <see cref="AnimalEntity"/>s.</param>
+/// <param name="imageStore">An <see cref="IImageStore"/> for saving and deleting images.</param>
 [ApiController]
 [Route("[controller]")]
-public sealed class AnimalController(IShelteredRepository shelteredRepository, IAnimalMapper animalMapper) : ControllerBase
+public sealed class AnimalController(IShelteredRepository shelteredRepository, IAnimalMapper animalMapper,
+    IImageStore imageStore) : ControllerBase
 {
     /// <summary>
     /// Determines if an animal with the provided id exists.
@@ -129,6 +133,53 @@ public sealed class AnimalController(IShelteredRepository shelteredRepository, I
         shelteredRepository.UpdateAnimal(animalEntity);
         await shelteredRepository.SaveChangesAsync(cancellationToken);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Adds an image for the animal with the provided id.
+    /// </summary>
+    /// <param name="animalId">A <see cref="Guid"/> representing the id of the animal.</param>
+    /// <param name="image">An <see cref="IFormFile"/> representing the image of the animal.</param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="StatusCodes.Status204NoContent"/> if the animal is updated successfully;
+    /// otherwise a <see cref="StatusCodes.Status404NotFound"/> if no animal exists with the provided id.
+    /// </returns>
+    [HttpPut("{animalId:Guid}/image")]
+    [EndpointName("AddImageForAnimalById")]
+    [EndpointSummary("Adds an image for the animal with the provided id.")]
+    [EndpointDescription("""
+        Adds the provided image for the animal with the provided id using the provided animal model and returns a 204
+        if the the animal is updated successfully;
+        otherwise returns a 404 if no animal with the provided id exists.
+    """)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Put([FromRoute, Description("The id of the animal.")] Guid animalId,
+        [FromForm, Description("The image to add.")] IFormFile image, CancellationToken cancellationToken = default)
+    {
+        var animalEntity = await shelteredRepository.GetAnimalByIdAsync(animalId, cancellationToken);
+        if (animalEntity is null)
+        {
+            return NotFound();
+        }
+
+        var imageLocation = await imageStore.SaveAsync(image, cancellationToken);
+
+        try
+        {
+            animalMapper.AddImage(animalEntity, imageLocation);
+            shelteredRepository.UpdateAnimal(animalEntity);
+            await shelteredRepository.SaveChangesAsync(cancellationToken);
+            return NoContent();
+        }
+        catch
+        {
+            imageStore.Delete(imageLocation);
+            return Problem(string.Empty, string.Empty, (int)HttpStatusCode.InternalServerError);
+        }
     }
 
     /// <summary>
