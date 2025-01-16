@@ -88,13 +88,13 @@ public sealed class ShelteredRepository(ShelteredContext shelteredContext) : ISh
     /// <inheritdoc cref="IShelteredRepository.GetAnimalByIdAsync(Guid, CancellationToken)"/>
     public async Task<AnimalEntity?> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await shelteredContext.Animals.SingleOrDefaultAsync(animalEntity => animalEntity.Id == id, cancellationToken);
+        return await shelteredContext.Animals.Include(animalEntity => animalEntity.Images).SingleOrDefaultAsync(animalEntity => animalEntity.Id == id, cancellationToken);
     }
 
     /// <inheritdoc cref="IShelteredRepository.ListAnimalsAsync(CancellationToken)"/>
     public async Task<List<AnimalEntity>> ListAnimalsAsync(CancellationToken cancellationToken = default)
     {
-        return await shelteredContext.Animals.ToListAsync(cancellationToken);
+        return await shelteredContext.Animals.Include(animalEntity => animalEntity.Images).ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc cref="IShelteredRepository.RemoveAnimal(AnimalEntity)"/>
