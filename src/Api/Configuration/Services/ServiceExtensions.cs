@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Api.Animals;
+using Api.Common;
 using Data;
 
 namespace Api.Configuration.Services;
@@ -32,6 +33,8 @@ public static class ServiceExtensions
     {
         services.AddScoped<IShelteredRepository, ShelteredRepository>();
         services.AddScoped<IAnimalMapper, AnimalMapper>();
+        services.AddScoped<IAnimalImageMapper, AnimalImageMapper>();
+        services.AddScoped<IImageStore, LocalFileSystemImageStore>();
         return services;
     }
 }
