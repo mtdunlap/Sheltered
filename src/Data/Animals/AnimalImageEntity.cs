@@ -8,23 +8,31 @@ namespace Data.Animals;
 /// Represents an entity for an image of an animal.
 /// </summary>
 [EntityTypeConfiguration(typeof(AnimalImageEntityConfiguration))]
-public sealed record class AnimalImageEntity : Entity
+public sealed record class AnimalImageEntity : Entity, IEntity<AnimalImageEntity>
 {
+    /// <inheritdoc/>
+    public static AnimalImageEntity NotFound { get; } = new()
+    {
+        AnimalId = Guid.Empty,
+        Animal = AnimalEntity.NotFound,
+        Location = string.Empty
+    };
+
     /// <summary>
     /// Gets or inits the id of the <see cref="AnimalEntity"/> to which this image belongs.
     /// </summary>
     /// <value>The id of the <see cref="AnimalEntity"/> to which this image belongs.</value>
-    public required Guid AnimalId { get; init; }
+    public Guid AnimalId { get; init; } = Guid.Empty;
 
     /// <summary>
     /// Gets or inits the <see cref="AnimalEntity"/> of which this image is for.
     /// </summary>
     /// <value>The animal in the image.</value>
-    public required AnimalEntity Animal { get; init; }
+    public AnimalEntity Animal { get; init; } = AnimalEntity.NotFound;
 
     /// <summary>
-    /// Gets or inits a <see cref="Uri"/> representing the location of the image.
+    /// Gets or inits the location of the image.
     /// </summary>
     /// <value>The location of the image.</value>
-    public required Uri Location { get; init; }
+    public required string Location { get; init; }
 }

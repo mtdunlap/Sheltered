@@ -9,8 +9,16 @@ namespace Data.Animals;
 /// Represents an entity for an animal.
 /// </summary>
 [EntityTypeConfiguration(typeof(AnimalEntityConfiguration))]
-public sealed record class AnimalEntity : Entity
+public sealed record class AnimalEntity : Entity, IEntity<AnimalEntity>
 {
+    /// <inheritdoc/>
+    public static AnimalEntity NotFound { get; } = new()
+    {
+        Name = null,
+        Kind = AnimalKind.Unspecified,
+        Sex = AnimalSex.Unknown
+    };
+
     /// <summary>
     /// Gets or sets the name of the animal. May be null.
     /// </summary>
