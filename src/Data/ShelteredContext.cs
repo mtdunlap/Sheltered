@@ -19,4 +19,10 @@ public sealed class ShelteredContext(DbContextOptions dbContextOptions) : DbCont
     /// </summary>
     /// <value>Represents the animals table of the sheltered database.</value>
     public DbSet<AnimalEntity> Animals { get; init; } = null!;
+
+    /// <summary>
+    /// Gets or inits the <see cref="DbSet{AnimalImageEntity}"/> of <see cref="AnimalImageEntity"/>.
+    /// </summary>
+    /// <value>Represents the animal images table of the sheltered database.</value>
+    public DbSet<AnimalImageEntity> AnimalImages { get; init; } = null!;
 }
