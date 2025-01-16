@@ -9,12 +9,12 @@ namespace Data.Animals;
 /// </summary>
 public sealed class AnimalEntityConfiguration : EntityConfiguration<AnimalEntity>, IEntityTypeConfiguration<AnimalEntity>
 {
-    private const string Table = "animals";
+    private const string TableName = "animals";
 
     /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<AnimalEntity> builder)
     {
-        builder.ToTable(Table, schema: ShelteredContext.Schema);
+        builder.ToTable(TableName, schema: ShelteredContext.Schema);
 
         ConfigureId(builder);
         ConfigureName(builder);
