@@ -25,13 +25,11 @@ public sealed class AnimalImageEntityConfiguration : EntityConfiguration<AnimalI
     {
         const string ColumnName = "location";
         const string ColumnType = "TEXT";
-        const int MaxLength = 50;
 
         builder
             .Property(animalImageEntity => animalImageEntity.Location)
             .HasColumnName(ColumnName)
             .HasColumnType(ColumnType)
-            .HasMaxLength(MaxLength)
-            .IsRequired(false);
+            .IsRequired(true);
     }
 }
