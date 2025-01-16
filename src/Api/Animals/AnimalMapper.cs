@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Client.Animals;
 using Data.Animals;
 
@@ -28,10 +30,17 @@ public interface IAnimalMapper
     /// <param name="animalEntity">The <see cref="AnimalEntity"/>.</param>
     /// <param name="animalModel">The <see cref="AnimalModel"/>.</param>
     void Update(AnimalEntity animalEntity, AnimalModel animalModel);
+
+    /// <summary>
+    /// Adds an image to the <see cref="AnimalEntity"/>.
+    /// </summary>
+    /// <param name="animalEntity">The <see cref="AnimalEntity"/> to which the image will be added.</param>
+    /// <param name="location">A <see cref="Uri"/> representing the location of the image.</param>
+    void AddImage(AnimalEntity animalEntity, Uri location);
 }
 
 /// <inheritdoc cref="IAnimalMapper"/>
-public sealed class AnimalMapper : IAnimalMapper
+public sealed class AnimalMapper(IAnimalImageMapper animalImageMapper) : IAnimalMapper
 {
     /// <inheritdoc cref="IAnimalMapper.Create(AnimalModel)"/>
     public AnimalEntity Create(AnimalModel animalModel) => new()
@@ -46,7 +55,8 @@ public sealed class AnimalMapper : IAnimalMapper
     {
         Name = animalEntity.Name,
         Kind = animalEntity.Kind,
-        Sex = animalEntity.Sex
+        Sex = animalEntity.Sex,
+        Images = [.. animalEntity.Images.Select(animalImageMapper.Map)]
     };
 
     /// <inheritdoc cref="IAnimalMapper.Update(AnimalEntity, AnimalModel)"/>
@@ -55,5 +65,12 @@ public sealed class AnimalMapper : IAnimalMapper
         animalEntity.Name = animalModel.Name;
         animalEntity.Kind = animalModel.Kind;
         animalEntity.Sex = animalModel.Sex;
+    }
+
+    /// <inheritdoc cref="IAnimalMapper.AddImage(AnimalEntity, Uri)"/>
+    public void AddImage(AnimalEntity animalEntity, Uri location)
+    {
+        var animalImageEntity = animalImageMapper.Create(animalEntity.Id, location);
+        animalEntity.Images.Add(animalImageEntity);
     }
 }
