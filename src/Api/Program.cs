@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Api.Configuration.Databases;
+using Api.Configuration.Options;
 using Api.Configuration.Services;
 
 namespace Api;
@@ -34,6 +35,11 @@ public sealed class Program
 
         builder.AddDatabases();
         builder.AddServices();
+        var localFileSystemImageRepositoryOptions = builder.Configuration.GetSection(LocalFileSystemImageStoreOptions.SectionKey);
+        builder.Services
+            .AddOptions<LocalFileSystemImageStoreOptions>()
+            .Bind(localFileSystemImageRepositoryOptions)
+            .ValidateDataAnnotations();
 
         var app = builder.Build();
 
