@@ -8,6 +8,9 @@
 *.db-shm
 *.db-wal
 
+#images directory
+images
+
 # dotenv files
 .env
 
