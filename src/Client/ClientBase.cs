@@ -145,6 +145,32 @@ public abstract class ClientBase(HttpClient httpClient) : IDisposable
     }
 
     /// <summary>
+    /// Asynchronously sends an HTTP PUT request to <paramref name="requestUri"/> with a form containing the provided
+    /// <paramref name="formData"/>.
+    /// </summary>
+    /// <param name="requestUri">The <see cref="Uri"/> to which the HTTP PUT request will be sent.</param>
+    /// <param name="formData">
+    /// The <see cref="MultipartFormDataContent"/> to include in the form content of the request.
+    /// </param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
+    /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+    protected async Task<bool> PutFormAsync(Uri requestUri, MultipartFormDataContent formData,
+        CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PutAsync(requestUri, formData, cancellationToken);
+        var statusCode = response.StatusCode;
+        return statusCode switch
+        {
+            HttpStatusCode.NoContent => true,
+            HttpStatusCode.NotFound => false,
+            _ => throw new HttpRequestException(
+                    $"{nameof(statusCode)} is neither {HttpStatusCode.NoContent} nor {HttpStatusCode.NotFound}.",
+                    null,
+                    statusCode)
+        };
+    }
+
+    /// <summary>
     /// Disposes the underlying <see cref="HttpClient"/>.
     /// </summary>
     public void Dispose()

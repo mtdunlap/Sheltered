@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Client.Animals;
@@ -13,6 +15,17 @@ namespace Client;
 /// </summary>
 public interface IShelteredClient : IDisposable
 {
+    /// <summary>
+    /// Asynchronously adds an image for the animal with the provided <paramref name="animalId"/>.
+    /// </summary>
+    /// <param name="animalId">A <see cref="Guid"/> representing the id of the animal.</param>
+    /// <param name="stream">A <see cref="Stream"/> representing the contents of the image.</param>
+    /// <param name="contentType">A <see cref="string"/> representing the MIME content type.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
+    /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<bool> AddImageAsync(Guid animalId, Stream stream, string contentType,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Asynchronously determines if an <see cref="AnimalModel"/> with the provided <paramref name="id"/> exists.
     /// </summary>
@@ -88,6 +101,18 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
     private static Uri RelativeAnimalRequestWithIdBaseAddress(Guid id)
     {
         return new($"{RelativeAnimalRequestBaseUrl}/{id}", UriKind.Relative);
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> AddImageAsync(Guid animalId, Stream stream, string contentType,
+    CancellationToken cancellationToken = default)
+    {
+        var relativeRoute = new Uri($"{RelativeAnimalRequestBaseUrl}/{animalId}/image", UriKind.Relative);
+        using var formData = new MultipartFormDataContent();
+        using var contents = new StreamContent(stream);
+        contents.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+        formData.Add(content: contents, name: "image", fileName: "image");
+        return await PutFormAsync(relativeRoute, formData, cancellationToken);
     }
 
     /// <inheritdoc/>
