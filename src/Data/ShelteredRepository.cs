@@ -21,6 +21,16 @@ public interface IShelteredRepository
     Task AddAnimalAsync(AnimalEntity animalEntity, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously adds an <see cref="AnimalImageEntity"/> to the repository.
+    /// </summary>
+    /// <param name="animalImageEntity">The <see cref="AnimalImageEntity"/> to add.</param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    Task AddAnimalImageAsync(AnimalImageEntity animalImageEntity, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously determines if an <see cref="AnimalEntity"/> with the provided id exists in the repository.
     /// </summary>
     /// <param name="id">The id of the <see cref="AnimalEntity"/> to find.</param>
@@ -35,6 +45,19 @@ public interface IShelteredRepository
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation and contains the <see cref="AnimalEntity"/> if found; otherwise contains null.</returns>
     Task<AnimalEntity?> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously retrieves an <see cref="AnimalImageEntity"/> with the provided id.
+    /// </summary>
+    /// <param name="id">The id of the <see cref="AnimalImageEntity"/> to find.</param>
+    /// <param name="cancellationToken">
+    /// A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task"/> that represents the asynchronous operation and contains the <see cref="AnimalImageEntity"/>
+    /// if found; otherwise contains <see cref="AnimalImageEntity.NotFound"/>.
+    /// </returns>
+    Task<AnimalImageEntity> GetAnimalImageByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves all <see cref="AnimalEntity"/>s.
@@ -78,6 +101,13 @@ public sealed class ShelteredRepository(ShelteredContext shelteredContext) : ISh
         _ = await shelteredContext.Animals.AddAsync(animalEntity, cancellationToken);
     }
 
+    /// <inheritdoc cref="IShelteredRepository.AddAnimalImageAsync(AnimalImageEntity, CancellationToken)"/>
+    public async Task AddAnimalImageAsync(AnimalImageEntity animalImageEntity,
+        CancellationToken cancellationToken = default)
+    {
+        _ = await shelteredContext.AnimalImages.AddAsync(animalImageEntity, cancellationToken);
+    }
+
     /// <inheritdoc cref="IShelteredRepository.AnimalExistsByIdAsync(Guid, CancellationToken)"/>
     public async Task<bool> AnimalExistsByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -89,6 +119,13 @@ public sealed class ShelteredRepository(ShelteredContext shelteredContext) : ISh
     public async Task<AnimalEntity?> GetAnimalByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await shelteredContext.Animals.Include(animalEntity => animalEntity.Images).SingleOrDefaultAsync(animalEntity => animalEntity.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc cref="IShelteredRepository.GetAnimalImageByIdAsync(Guid, CancellationToken)"/>
+    public async Task<AnimalImageEntity> GetAnimalImageByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await shelteredContext.AnimalImages.SingleOrDefaultAsync(animalImageEntity => animalImageEntity.Id == id,
+            cancellationToken) ?? AnimalImageEntity.NotFound;
     }
 
     /// <inheritdoc cref="IShelteredRepository.ListAnimalsAsync(CancellationToken)"/>

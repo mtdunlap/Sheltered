@@ -15,7 +15,11 @@ public sealed record class AnimalImageEntity : Entity, IEntity<AnimalImageEntity
     {
         AnimalId = Guid.Empty,
         Animal = AnimalEntity.NotFound,
-        Location = string.Empty
+        Location = string.Empty,
+        ContentType = string.Empty,
+        Height = 0,
+        Width = 0,
+        FileSize = 0
     };
 
     /// <summary>
@@ -35,4 +39,28 @@ public sealed record class AnimalImageEntity : Entity, IEntity<AnimalImageEntity
     /// </summary>
     /// <value>The location of the image.</value>
     public required string Location { get; init; }
+
+    /// <summary>
+    /// Gets or inits the content type of the image.
+    /// </summary>
+    /// <value>The content type of the image.</value>
+    public required string ContentType { get; init; }
+
+    /// <summary>
+    /// Gets or inits the height of the image in pixels.
+    /// </summary>
+    /// <value>The height of the image in pixels.</value>
+    public required uint Height { get; init; }
+
+    /// <summary>
+    /// Gets or inits the width of the image in pixels.
+    /// </summary>
+    /// <value>The width of the image in pixels.</value>
+    public required uint Width { get; init; }
+
+    /// <summary>
+    /// Gets or inits the file size of the image in bytes.
+    /// </summary>
+    /// <value>The file size of the image in bytes.</value>
+    public required ulong FileSize { get; init; }
 }

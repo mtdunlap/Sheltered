@@ -1,7 +1,7 @@
-using System;
 using System.Linq;
 using Client.Animals;
 using Data.Animals;
+using Microsoft.AspNetCore.Http;
 
 namespace Api.Animals;
 
@@ -21,8 +21,9 @@ public interface IAnimalMapper
     /// Creates a new <see cref="AnimalModel"/> from an <see cref="AnimalEntity"/>.
     /// </summary>
     /// <param name="animalEntity">The <see cref="AnimalEntity"/>.</param>
+    /// <param name="httpContext">The <see cref="HttpContext"/> of the request.</param>
     /// <returns>A new <see cref="AnimalModel"/>.</returns>
-    AnimalModel Map(AnimalEntity animalEntity);
+    AnimalModel Map(AnimalEntity animalEntity, HttpContext httpContext);
 
     /// <summary>
     /// Updates the <see cref="AnimalEntity"/> using the provided <see cref="AnimalModel"/>.
@@ -30,13 +31,6 @@ public interface IAnimalMapper
     /// <param name="animalEntity">The <see cref="AnimalEntity"/>.</param>
     /// <param name="animalModel">The <see cref="AnimalModel"/>.</param>
     void Update(AnimalEntity animalEntity, AnimalModel animalModel);
-
-    /// <summary>
-    /// Adds an image to the <see cref="AnimalEntity"/>.
-    /// </summary>
-    /// <param name="animalEntity">The <see cref="AnimalEntity"/> to which the image will be added.</param>
-    /// <param name="location">A <see cref="Uri"/> representing the location of the image.</param>
-    void AddImage(AnimalEntity animalEntity, Uri location);
 }
 
 /// <inheritdoc cref="IAnimalMapper"/>
@@ -50,13 +44,14 @@ public sealed class AnimalMapper(IAnimalImageMapper animalImageMapper) : IAnimal
         Sex = animalModel.Sex
     };
 
-    /// <inheritdoc cref="IAnimalMapper.Map(AnimalEntity)"/>
-    public AnimalModel Map(AnimalEntity animalEntity) => new()
+    /// <inheritdoc cref="IAnimalMapper.Map(AnimalEntity, HttpContext)"/>
+    public AnimalModel Map(AnimalEntity animalEntity, HttpContext httpContext) => new()
     {
         Name = animalEntity.Name,
         Kind = animalEntity.Kind,
         Sex = animalEntity.Sex,
-        Images = [.. animalEntity.Images.Select(animalImageMapper.Map)]
+        Images = [.. animalEntity.Images
+            .Select(animalImageEntity => animalImageMapper.Map(animalImageEntity, httpContext))]
     };
 
     /// <inheritdoc cref="IAnimalMapper.Update(AnimalEntity, AnimalModel)"/>
@@ -65,12 +60,5 @@ public sealed class AnimalMapper(IAnimalImageMapper animalImageMapper) : IAnimal
         animalEntity.Name = animalModel.Name;
         animalEntity.Kind = animalModel.Kind;
         animalEntity.Sex = animalModel.Sex;
-    }
-
-    /// <inheritdoc cref="IAnimalMapper.AddImage(AnimalEntity, Uri)"/>
-    public void AddImage(AnimalEntity animalEntity, Uri location)
-    {
-        var animalImageEntity = animalImageMapper.Create(animalEntity.Id, location);
-        animalEntity.Images.Add(animalImageEntity);
     }
 }
