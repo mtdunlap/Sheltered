@@ -145,7 +145,7 @@ public abstract class ClientBase(HttpClient httpClient) : IDisposable
     }
 
     /// <summary>
-    /// Asynchronously sends an HTTP PUT request to <paramref name="requestUri"/> with a form containing the provided
+    /// Asynchronously sends an HTTP POST request to <paramref name="requestUri"/> with a form containing the provided
     /// <paramref name="formData"/>.
     /// </summary>
     /// <param name="requestUri">The <see cref="Uri"/> to which the HTTP PUT request will be sent.</param>
@@ -154,20 +154,19 @@ public abstract class ClientBase(HttpClient httpClient) : IDisposable
     /// </param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    protected async Task<bool> PutFormAsync(Uri requestUri, MultipartFormDataContent formData,
+    protected async Task<TModel?> PostFormAsync<TModel>(Uri requestUri, MultipartFormDataContent formData,
         CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsync(requestUri, formData, cancellationToken);
+        var response = await httpClient.PostAsync(requestUri, formData, cancellationToken);
         var statusCode = response.StatusCode;
-        return statusCode switch
+        if (statusCode != HttpStatusCode.Created)
         {
-            HttpStatusCode.NoContent => true,
-            HttpStatusCode.NotFound => false,
-            _ => throw new HttpRequestException(
-                    $"{nameof(statusCode)} is neither {HttpStatusCode.NoContent} nor {HttpStatusCode.NotFound}.",
-                    null,
-                    statusCode)
-        };
+            throw new HttpRequestException(
+                $"{nameof(statusCode)} is not {HttpStatusCode.Created}.",
+                null,
+                statusCode);
+        }
+        return await response.Content.ReadFromJsonAsync<TModel>(cancellationToken);
     }
 
     /// <summary>

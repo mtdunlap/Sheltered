@@ -23,7 +23,7 @@ public interface IShelteredClient : IDisposable
     /// <param name="contentType">A <see cref="string"/> representing the MIME content type.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to cancel the operation.</param>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<bool> AddImageAsync(Guid animalId, Stream stream, string contentType,
+    Task<AnimalImageModel> AddImageAsync(Guid animalId, Stream stream, string contentType,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -89,6 +89,11 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
     private const string RelativeAnimalRequestBaseUrl = "animal";
 
     /// <summary>
+    /// A relative url representing the animal images address.
+    /// </summary>
+    private const string RelativeAnimalImageRequestBaseUrl = "image";
+
+    /// <summary>
     /// A relative <see cref="Uri"/> representing the animals address.
     /// </summary>
     private static readonly Uri RelativeAnimalRequestBaseAddress = new(RelativeAnimalRequestBaseUrl, UriKind.Relative);
@@ -103,16 +108,28 @@ public sealed class ShelteredClient(HttpClient httpClient) : ClientBase(httpClie
         return new($"{RelativeAnimalRequestBaseUrl}/{id}", UriKind.Relative);
     }
 
-    /// <inheritdoc/>
-    public async Task<bool> AddImageAsync(Guid animalId, Stream stream, string contentType,
-    CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Builds a relative <see cref="Uri"/> representing the animal images addresses.
+    /// </summary>
+    /// <param name="id">A <see cref="Guid"/> representing the id of <see cref="AnimalModel"/>. May be null.</param>
+    /// <returns>A relative <see cref="Uri"/> representing the relative address of the animals endpoints.</returns>
+    private static Uri RelativeAnimalImageRequestWithIdBaseAddress(Guid id)
     {
-        var relativeRoute = new Uri($"{RelativeAnimalRequestBaseUrl}/{animalId}/image", UriKind.Relative);
+        return new($"{RelativeAnimalImageRequestBaseUrl}/{id}", UriKind.Relative);
+    }
+
+    /// <inheritdoc/>
+    public async Task<AnimalImageModel> AddImageAsync(Guid animalId, Stream stream, string contentType,
+        CancellationToken cancellationToken = default)
+    {
         using var formData = new MultipartFormDataContent();
         using var contents = new StreamContent(stream);
         contents.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
         formData.Add(content: contents, name: "image", fileName: "image");
-        return await PutFormAsync(relativeRoute, formData, cancellationToken);
+
+        var route = RelativeAnimalImageRequestWithIdBaseAddress(animalId);
+        var created = await PostFormAsync<AnimalImageModel>(route, formData, cancellationToken);
+        return created ?? throw new HttpRequestException($"The deserialized json {nameof(AnimalModel)} was null.");
     }
 
     /// <inheritdoc/>
