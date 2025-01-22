@@ -16,7 +16,7 @@
 @foreach (var (id, animal) in IdsToAnimals)
 {
     <a href="@($"animals/{id}")">
-        <AnimalPreview Animal="@animal"/>
+        <AnimalPreview Animal="@animal" Height="170" Width="128"/>
     </a>
 }
 </div>
