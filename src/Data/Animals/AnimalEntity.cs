@@ -16,7 +16,8 @@ public sealed record class AnimalEntity : Entity, IEntity<AnimalEntity>
     {
         Name = null,
         Kind = AnimalKind.Unspecified,
-        Sex = AnimalSex.Unknown
+        Sex = AnimalSex.Unknown,
+        Images = []
     };
 
     /// <summary>
