@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using Core.Animals
+@namespace Web.Animals
+
+<div>
+    <InputFile OnChange="@SetFile"/>
+    <button disabled="@(HasFile == false)" class="btn btn-primary" @onclick="UploadFileAsync">Upload</button>
+    @if(HasUploadResultMessage)
+    {
+        <div>
+            @UploadResultMessage
+        </div>
+    }
+</div>
