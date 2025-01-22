@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Client;
+using Web.Common;
 
 namespace Web.Configuration.Http;
 
@@ -22,6 +23,7 @@ public static class HttpClientExtensions
     public static WebApplicationBuilder AddHttpClients(this WebApplicationBuilder builder)
     {
         builder.AddHttpClient<IShelteredClient, ShelteredClient>();
+        builder.Services.AddScoped<IHandledShelteredClient, HandledShelteredClient>();
         return builder;
     }
 
