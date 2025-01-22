@@ -7,4 +7,10 @@
     <span>@Animal.Kind.ToString()</span>
     <label>Sex</label>
     <span>@Animal.Sex.ToString()</span>
+    @if(Animal.Images.Count > 0)
+    {
+        <div>
+            <img src="@Location" height="@Height" width="@Width">
+        </div>
+    }
 </div>
