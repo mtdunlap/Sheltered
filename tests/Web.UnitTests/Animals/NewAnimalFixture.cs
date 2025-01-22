@@ -90,7 +90,12 @@ internal sealed class NewAnimalFixture
 
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
-            .CreateAnimalAsync(Arg.Is(animalModel), Arg.Is(CancellationToken.None))
+            .CreateAnimalAsync(
+                Arg.Is<AnimalModel>(animalModel =>
+                    string.Equals(animalModel.Name, "Lucy", StringComparison.InvariantCulture)
+                    && animalModel.Kind == AnimalKind.Cat
+                    && animalModel.Sex == AnimalSex.Female),
+                Arg.Is(CancellationToken.None))
             .ThrowsAsync<HttpRequestException>();
 
         testContext.Services.AddSingleton(shelteredClient);
@@ -118,7 +123,8 @@ internal sealed class NewAnimalFixture
                     .CreateAnimalAsync(
                         Arg.Is<AnimalModel>(animalModel =>
                             string.Equals(animalModel.Name, "Lucy", StringComparison.InvariantCulture)
-                            && animalModel.Kind == AnimalKind.Cat && animalModel.Sex == AnimalSex.Female),
+                            && animalModel.Kind == AnimalKind.Cat
+                            && animalModel.Sex == AnimalSex.Female),
                         Arg.Is(CancellationToken.None)
                     );
             }, Throws.Nothing);
@@ -165,7 +171,12 @@ internal sealed class NewAnimalFixture
 
         using var shelteredClient = Substitute.For<IShelteredClient>();
         shelteredClient
-            .CreateAnimalAsync(Arg.Is(animalModel), Arg.Is(CancellationToken.None))
+            .CreateAnimalAsync(
+                Arg.Is<AnimalModel>(animalModel =>
+                    string.Equals(animalModel.Name, "Lucy", StringComparison.InvariantCulture)
+                    && animalModel.Kind == AnimalKind.Cat
+                    && animalModel.Sex == AnimalSex.Female),
+                Arg.Is(CancellationToken.None))
             .Returns((animalModel, id));
 
         testContext.Services.AddSingleton(shelteredClient);
@@ -193,7 +204,8 @@ internal sealed class NewAnimalFixture
                     .CreateAnimalAsync(
                         Arg.Is<AnimalModel>(animalModel =>
                             string.Equals(animalModel.Name, "Lucy", StringComparison.InvariantCulture)
-                            && animalModel.Kind == AnimalKind.Cat && animalModel.Sex == AnimalSex.Female),
+                            && animalModel.Kind == AnimalKind.Cat
+                            && animalModel.Sex == AnimalSex.Female),
                         Arg.Is(CancellationToken.None)
                     );
             }, Throws.Nothing);

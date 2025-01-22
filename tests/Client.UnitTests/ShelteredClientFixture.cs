@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using RichardSzalay.MockHttp;
 using Client.Animals;
 using Core.Animals;
+using System.Linq;
 
 namespace Client.UnitTests;
 
@@ -297,7 +298,15 @@ public sealed class ShelteredClientFixture
         {
             Name = "Lucy",
             Kind = AnimalKind.Cat,
-            Sex = AnimalSex.Female
+            Sex = AnimalSex.Female,
+            Images = []
+        };
+        var created = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = []
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -305,19 +314,22 @@ public sealed class ShelteredClientFixture
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
                 new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/{id}" } },
-                JsonContent.Create(animalModel));
+                JsonContent.Create(created));
         using var httpClient = new HttpClient(handler)
         {
             BaseAddress = new Uri(baseUrl, UriKind.Absolute)
         };
         using var shelteredClient = new ShelteredClient(httpClient);
 
-        var (created, createdId) = await shelteredClient.CreateAnimalAsync(animalModel, CancellationTokenSource.Token);
+        var (actualCreated, actualId) = await shelteredClient.CreateAnimalAsync(animalModel, CancellationTokenSource.Token);
 
         Assert.Multiple(() =>
         {
-            Assert.That(created, Is.EqualTo(animalModel));
-            Assert.That(createdId, Is.EqualTo(id));
+            Assert.That(actualCreated.Name, Is.EqualTo("Lucy"));
+            Assert.That(actualCreated.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actualCreated.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actualCreated.Images, Is.Empty);
+            Assert.That(actualId, Is.EqualTo(id));
             Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
             Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
         });
@@ -332,7 +344,15 @@ public sealed class ShelteredClientFixture
         {
             Name = "Lucy",
             Kind = AnimalKind.Cat,
-            Sex = AnimalSex.Female
+            Sex = AnimalSex.Female,
+            Images = []
+        };
+        var created = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = []
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -340,19 +360,22 @@ public sealed class ShelteredClientFixture
                 .WithJsonContent(animalModel)
             .Respond(HttpStatusCode.Created,
                 new Dictionary<string, string>() { { "Location", $"{baseUrl}/animal/{id}/" } },
-                JsonContent.Create(animalModel));
+                JsonContent.Create(created));
         using var httpClient = new HttpClient(handler)
         {
             BaseAddress = new Uri(baseUrl, UriKind.Absolute)
         };
         using var shelteredClient = new ShelteredClient(httpClient);
 
-        var (created, createdId) = await shelteredClient.CreateAnimalAsync(animalModel, CancellationTokenSource.Token);
+        var (actualCreated, actualId) = await shelteredClient.CreateAnimalAsync(animalModel, CancellationTokenSource.Token);
 
         Assert.Multiple(() =>
         {
-            Assert.That(created, Is.EqualTo(animalModel));
-            Assert.That(createdId, Is.EqualTo(id));
+            Assert.That(actualCreated.Name, Is.EqualTo("Lucy"));
+            Assert.That(actualCreated.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actualCreated.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actualCreated.Images, Is.Empty);
+            Assert.That(actualId, Is.EqualTo(id));
             Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
             Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
         });
@@ -579,7 +602,8 @@ public sealed class ShelteredClientFixture
         {
             Name = "Lucy",
             Kind = AnimalKind.Cat,
-            Sex = AnimalSex.Female
+            Sex = AnimalSex.Female,
+            Images = []
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -595,7 +619,10 @@ public sealed class ShelteredClientFixture
 
         Assert.Multiple(() =>
         {
-            Assert.That(actual, Is.EqualTo(animalModel));
+            Assert.That(actual.Name, Is.EqualTo("Lucy"));
+            Assert.That(actual.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actual.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actual.Images, Is.Empty);
             Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
             Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
         });
@@ -705,17 +732,15 @@ public sealed class ShelteredClientFixture
     {
         const string baseUrl = "http://localhost:5108";
         var id = Guid.NewGuid();
+        var animalModel = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female
+        };
         var idsToAnimals = new Dictionary<Guid, AnimalModel>
         {
-            {
-                id,
-                new()
-                {
-                    Name = "Lucy",
-                    Kind = AnimalKind.Cat,
-                    Sex = AnimalSex.Female
-                }
-            }
+            { id, animalModel }
         };
         using var handler = new MockHttpMessageHandler();
         var request = handler
@@ -731,7 +756,14 @@ public sealed class ShelteredClientFixture
 
         Assert.Multiple(() =>
         {
-            Assert.That(actual, Is.EquivalentTo(idsToAnimals));
+            Assert.That(actual, Has.Exactly(1).Items);
+            Assert.That(actual, Does.ContainKey(id).WithValue(animalModel).Using<AnimalModel>((left, right) =>
+            {
+                return string.Equals(left.Name, right.Name, StringComparison.InvariantCulture)
+                    && left.Kind == right.Kind
+                    && left.Sex == right.Sex
+                    && left.Images.SequenceEqual(right.Images);
+            }));
             Assert.That(handler.GetMatchCount(request), Is.EqualTo(1));
             Assert.That(() => handler.VerifyNoOutstandingExpectation(), Throws.Nothing);
         });

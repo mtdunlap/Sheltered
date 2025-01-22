@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using NSubstitute;
 using Api.Animals;
 using Client.Animals;
 using Core.Animals;
@@ -11,46 +12,138 @@ namespace Api.UnitTests.Animals;
 [Parallelizable(ParallelScope.All)]
 internal sealed class AnimalMapperFixture
 {
-    private static IEnumerable<TestCaseData> CreateTestCaseSource()
-    {
-        yield return new TestCaseData(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
-            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
-    }
-
-    [Test, TestCaseSource(nameof(CreateTestCaseSource))]
+    [Test]
     [TestOf(nameof(AnimalMapper.Create))]
-    public AnimalEntity Create__Should_return_an_animal_entity_created_from_an_animal_model(AnimalModel animalModel)
+    public void Create__Should_return_an_animal_entity_created_from_an_animal_model()
     {
-        var animalMapper = new AnimalMapper();
-        return animalMapper.Create(animalModel);
+        var animalImageMapper = Substitute.For<IAnimalImageMapper>();
+        var animalMapper = new AnimalMapper(animalImageMapper);
+
+        var animalModel = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = []
+        };
+
+        var actual = animalMapper.Create(animalModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Name, Is.EqualTo("Lucy"));
+            Assert.That(actual.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actual.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actual.Images, Is.Empty);
+        });
     }
 
-    private static IEnumerable<TestCaseData> MapTestCaseSource()
-    {
-        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
-            .Returns(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
-    }
-
-    [Test, TestCaseSource(nameof(MapTestCaseSource))]
+    [Test]
     [TestOf(nameof(AnimalMapper.Map))]
-    public AnimalModel Map__Should_return_an_animal_model_mapped_from_an_animal_entity(AnimalEntity animalEntity)
+    public void Map__Should_return_an_animal_model_mapped_from_an_animal_entity_When_the_animal_has_no_images()
     {
-        var animalMapper = new AnimalMapper();
-        return animalMapper.Map(animalEntity);
+        var animalImageMapper = Substitute.For<IAnimalImageMapper>();
+        var httpContext = Substitute.For<HttpContext>();
+
+        var animalEntity = new AnimalEntity
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = []
+        };
+
+        var animalMapper = new AnimalMapper(animalImageMapper);
+        var actual = animalMapper.Map(animalEntity, httpContext);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Name, Is.EqualTo("Lucy"));
+            Assert.That(actual.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actual.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actual.Images, Is.Empty);
+        });
     }
 
-    private static IEnumerable<TestCaseData> UpdateTestCaseSource()
+    [Test]
+    [TestOf(nameof(AnimalMapper.Map))]
+    public void Map__Should_return_an_animal_model_mapped_from_an_animal_entity_When_the_animal_has_exactly_one_image()
     {
-        yield return new TestCaseData(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Dog, Sex = AnimalSex.Female }, new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female })
-            .Returns(new AnimalEntity { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female });
+        var animalImageMapper = Substitute.For<IAnimalImageMapper>();
+        var httpContext = Substitute.For<HttpContext>();
+        var animalImageEntity = new AnimalImageEntity
+        {
+            Location = "http://localhost/",
+            ContentType = "image/png",
+            Height = 900,
+            Width = 1600,
+            FileSize = 100_000
+        };
+        var animalImageModel = new AnimalImageModel
+        {
+            Location = "http://localhost/",
+            ContentType = "image/png",
+            Height = 900,
+            Width = 1600,
+            FileSize = 100_000
+        };
+        animalImageMapper
+            .Map(animalImageEntity, httpContext)
+            .Returns(animalImageModel);
+
+        var animalEntity = new AnimalEntity
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = [
+                animalImageEntity
+            ]
+        };
+
+        var animalMapper = new AnimalMapper(animalImageMapper);
+        var actual = animalMapper.Map(animalEntity, httpContext);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Name, Is.EqualTo("Lucy"));
+            Assert.That(actual.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actual.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actual.Images, Has.Exactly(1).Items);
+            Assert.That(actual.Images, Has.Exactly(1).SameAs(animalImageModel));
+        });
     }
 
-    [Test, TestCaseSource(nameof(UpdateTestCaseSource))]
+    [Test]
     [TestOf(nameof(AnimalMapper.Update))]
-    public AnimalEntity Update__Should_update_an_animal_entity_from_an_animal_model(AnimalEntity animalEntity, AnimalModel animalModel)
+    public void Update__Should_update_an_animal_entity_from_an_animal_model()
     {
-        var animalMapper = new AnimalMapper();
+        var animalImageMapper = Substitute.For<IAnimalImageMapper>();
+        var animalMapper = new AnimalMapper(animalImageMapper);
+
+        var animalEntity = new AnimalEntity
+        {
+            Name = "Jake",
+            Kind = AnimalKind.Dog,
+            Sex = AnimalSex.Male,
+            Images = []
+        };
+        var animalModel = new AnimalModel
+        {
+            Name = "Lucy",
+            Kind = AnimalKind.Cat,
+            Sex = AnimalSex.Female,
+            Images = []
+        };
+
         animalMapper.Update(animalEntity, animalModel);
-        return animalEntity;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(animalEntity.Name, Is.EqualTo("Lucy"));
+            Assert.That(animalEntity.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(animalEntity.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(animalEntity.Images, Is.Empty);
+        });
     }
 }

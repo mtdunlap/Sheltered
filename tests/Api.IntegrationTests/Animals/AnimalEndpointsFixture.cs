@@ -170,7 +170,13 @@ internal sealed class AnimalEndpointsFixture : ApiFixture
 
         var actual = await shelteredClient.GetAnimalByIdAsync(id, cancellationTokenSource.Token);
 
-        Assert.That(actual, Is.EqualTo(new AnimalModel { Name = "Lucy", Kind = AnimalKind.Cat, Sex = AnimalSex.Female }));
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Name, Is.EqualTo("Lucy"));
+            Assert.That(actual.Kind, Is.EqualTo(AnimalKind.Cat));
+            Assert.That(actual.Sex, Is.EqualTo(AnimalSex.Female));
+            Assert.That(actual.Images, Is.Empty);
+        });
     }
 
     [Test]

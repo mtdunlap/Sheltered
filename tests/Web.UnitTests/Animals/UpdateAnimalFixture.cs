@@ -193,6 +193,7 @@ internal sealed class UpdateAnimalFixture
         testContext.Services.AddSingleton(shelteredClient);
 
         testContext.ComponentFactories.AddStub<PageTitle>();
+        testContext.ComponentFactories.AddStub<ImageUpload>(_ => "<div>ImageUpload</div>");
 
         using var newAnimalPage = testContext.RenderComponent<UpdateAnimal>(parameters =>
         {
@@ -249,6 +250,7 @@ internal sealed class UpdateAnimalFixture
                         </select>
                         <button class=""btn btn-primary"">Submit</button>
                     </div>
+                    <div>ImageUpload</div>
                 ");
             }, Throws.Nothing);
         });
@@ -271,19 +273,20 @@ internal sealed class UpdateAnimalFixture
             .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(CancellationToken.None))
             .Returns(initialAnimalModel);
 
-        var updateAnimalModel = new AnimalModel
-        {
-            Name = "Jake",
-            Kind = AnimalKind.Dog,
-            Sex = AnimalSex.Male
-        };
         shelteredClient
-            .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
+            .UpdateAnimalByIdAsync(
+                Arg.Is(id),
+                Arg.Is<AnimalModel>(animalModel =>
+                    string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                    && animalModel.Kind == AnimalKind.Dog
+                    && animalModel.Sex == AnimalSex.Male),
+                Arg.Is(CancellationToken.None))
             .ThrowsAsync<HttpRequestException>();
 
         testContext.Services.AddSingleton(shelteredClient);
 
         testContext.ComponentFactories.AddStub<PageTitle>();
+        testContext.ComponentFactories.AddStub<ImageUpload>(_ => "<div>ImageUpload</div>");
 
         using var newAnimalPage = testContext.RenderComponent<UpdateAnimal>(parameters =>
         {
@@ -317,11 +320,19 @@ internal sealed class UpdateAnimalFixture
             {
                 _ = await shelteredClient
                     .Received(Quantity.Exactly(1))
-                    .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None));
+                    .UpdateAnimalByIdAsync(
+                        Arg.Is(id),
+                        Arg.Is<AnimalModel>(animalModel =>
+                            string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                            && animalModel.Kind == AnimalKind.Dog
+                            && animalModel.Sex == AnimalSex.Male),
+                        Arg.Is(CancellationToken.None));
             }, Throws.Nothing);
             Assert.That(navigationManager.History, Is.Empty);
             Assert.That(pageTitle.Markup, Is.EqualTo("Update"));
-            newAnimalPage.MarkupMatches(@"
+            Assert.That(() =>
+            {
+                newAnimalPage.MarkupMatches(@"
                     <h1>Update Animal</h1>
                     <div>
                     <label>Current Name</label>
@@ -349,10 +360,8 @@ internal sealed class UpdateAnimalFixture
                     <button class=""btn btn-primary"" >Submit</button>
                     <div>An unknown error occurred, please try again momentarily.</div>
                     </div>
+                    <div>ImageUpload</div>
                 ");
-            Assert.That(() =>
-            {
-
             }, Throws.Nothing);
         });
     }
@@ -374,19 +383,20 @@ internal sealed class UpdateAnimalFixture
             .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(CancellationToken.None))
             .Returns(initialAnimalModel);
 
-        var updateAnimalModel = new AnimalModel
-        {
-            Name = "Jake",
-            Kind = AnimalKind.Dog,
-            Sex = AnimalSex.Male
-        };
         shelteredClient
-            .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
+            .UpdateAnimalByIdAsync(
+                Arg.Is(id),
+                Arg.Is<AnimalModel>(animalModel =>
+                    string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                    && animalModel.Kind == AnimalKind.Dog
+                    && animalModel.Sex == AnimalSex.Male),
+                Arg.Is(CancellationToken.None))
             .Returns(false);
 
         testContext.Services.AddSingleton(shelteredClient);
 
         testContext.ComponentFactories.AddStub<PageTitle>();
+        testContext.ComponentFactories.AddStub<ImageUpload>(_ => "<div>ImageUpload</div>");
 
         using var newAnimalPage = testContext.RenderComponent<UpdateAnimal>(parameters =>
         {
@@ -420,7 +430,13 @@ internal sealed class UpdateAnimalFixture
             {
                 _ = await shelteredClient
                     .Received(Quantity.Exactly(1))
-                    .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None));
+                    .UpdateAnimalByIdAsync(
+                        Arg.Is(id),
+                        Arg.Is<AnimalModel>(animalModel =>
+                            string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                            && animalModel.Kind == AnimalKind.Dog
+                            && animalModel.Sex == AnimalSex.Male),
+                        Arg.Is(CancellationToken.None));
             }, Throws.Nothing);
             Assert.That(navigationManager.History, Is.Empty);
             Assert.That(pageTitle.Markup, Is.EqualTo("Update"));
@@ -454,6 +470,7 @@ internal sealed class UpdateAnimalFixture
                             <button class=""btn btn-primary"">Submit</button>
                             <div>The animal could not be updated as it does not exist.</div>
                         </div>
+                        <div>ImageUpload</div>
                 ");
             }, Throws.Nothing);
         });
@@ -476,19 +493,20 @@ internal sealed class UpdateAnimalFixture
             .GetAnimalByIdAsync(Arg.Is(id), Arg.Is(CancellationToken.None))
             .Returns(initialAnimalModel);
 
-        var updateAnimalModel = new AnimalModel
-        {
-            Name = "Jake",
-            Kind = AnimalKind.Dog,
-            Sex = AnimalSex.Male
-        };
         shelteredClient
-            .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None))
+            .UpdateAnimalByIdAsync(
+                Arg.Is(id),
+                Arg.Is<AnimalModel>(animalModel =>
+                    string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                    && animalModel.Kind == AnimalKind.Dog
+                    && animalModel.Sex == AnimalSex.Male),
+                Arg.Is(CancellationToken.None))
             .Returns(true);
 
         testContext.Services.AddSingleton(shelteredClient);
 
         testContext.ComponentFactories.AddStub<PageTitle>();
+        testContext.ComponentFactories.AddStub<ImageUpload>(_ => "<div>ImageUpload</div>");
 
         using var newAnimalPage = testContext.RenderComponent<UpdateAnimal>(parameters =>
         {
@@ -522,7 +540,13 @@ internal sealed class UpdateAnimalFixture
             {
                 _ = await shelteredClient
                     .Received(Quantity.Exactly(1))
-                    .UpdateAnimalByIdAsync(Arg.Is(id), Arg.Is(updateAnimalModel), Arg.Is(CancellationToken.None));
+                    .UpdateAnimalByIdAsync(
+                        Arg.Is(id),
+                        Arg.Is<AnimalModel>(animalModel =>
+                            string.Equals(animalModel.Name, "Jake", StringComparison.InvariantCulture)
+                            && animalModel.Kind == AnimalKind.Dog
+                            && animalModel.Sex == AnimalSex.Male),
+                        Arg.Is(CancellationToken.None));
             }, Throws.Nothing);
             var expectedRelativeUrl = $"animals/{id}";
             var expected = navigationManager.BaseUri + expectedRelativeUrl;

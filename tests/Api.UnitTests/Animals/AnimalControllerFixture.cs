@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -10,7 +12,6 @@ using Client.Animals;
 using Core.Animals;
 using Data;
 using Data.Animals;
-using System.Collections.Generic;
 
 namespace Api.UnitTests.Animals;
 
@@ -137,7 +138,7 @@ internal sealed class AnimalControllerFixture
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
-            .Map(Arg.Is(animalEntity))
+            .Map(Arg.Is(animalEntity), Arg.Any<HttpContext>())
             .Returns(animalModel);
 
         var animalController = new AnimalController(shelteredRepository, animalMapper);
@@ -156,7 +157,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(animalEntity));
+                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(animalEntity), Arg.Any<HttpContext>());
             }, Throws.Nothing);
         });
     }
@@ -191,7 +192,7 @@ internal sealed class AnimalControllerFixture
         };
         var animalMapper = Substitute.For<IAnimalMapper>();
         animalMapper
-            .Map(Arg.Is(animalEntity))
+            .Map(Arg.Is(animalEntity), Arg.Any<HttpContext>())
             .Returns(animalModel);
 
         var animalController = new AnimalController(shelteredRepository, animalMapper);
@@ -212,7 +213,7 @@ internal sealed class AnimalControllerFixture
             Assert.That(animalMapper.ReceivedCalls(), Has.Exactly(1).Items);
             Assert.That(() =>
             {
-                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(animalEntity));
+                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(animalEntity), Arg.Any<HttpContext>());
             }, Throws.Nothing);
         });
     }
@@ -328,7 +329,7 @@ internal sealed class AnimalControllerFixture
         };
         shelteredRepository
             .GetAnimalByIdAsync(Arg.Is(animalEntity.Id), Arg.Is(cancellationToken))
-            .Returns(animalEntity);
+            .Returns(createdEntity);
 
         var createdModel = new AnimalModel
         {
@@ -337,7 +338,7 @@ internal sealed class AnimalControllerFixture
             Sex = AnimalSex.Female
         };
         animalMapper
-            .Map(Arg.Is(createdEntity))
+            .Map(Arg.Is(createdEntity), Arg.Any<HttpContext>())
             .Returns(createdModel);
 
         var animalController = new AnimalController(shelteredRepository, animalMapper);
@@ -370,7 +371,7 @@ internal sealed class AnimalControllerFixture
             }, Throws.Nothing);
             Assert.That(() =>
             {
-                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(createdEntity));
+                _ = animalMapper.Received(Quantity.Exactly(1)).Map(Arg.Is(createdEntity), Arg.Any<HttpContext>());
             }, Throws.Nothing);
         });
     }

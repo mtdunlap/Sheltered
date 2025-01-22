@@ -1,11 +1,17 @@
 using System;
 using System.Data.Common;
+using System.IO;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
+using Api.Common;
 using Data;
+using Tests.Common.Services;
 
 namespace Api.IntegrationTests;
 
@@ -37,6 +43,36 @@ internal sealed class ApiWebApplicationFactory<TProgram> : WebApplicationFactory
             {
                 var connection = serviceProvider.GetRequiredService<DbConnection>();
                 options.UseSqlite(connection);
+            });
+
+            services.ReplaceRequiredScopedService<IImageStore, IImageStore>(serviceProvider =>
+            {
+                var imageStore = Substitute.For<IImageStore>();
+
+                imageStore
+                    .SaveAsync(Arg.Any<IFormFile>(), Arg.Any<CancellationToken>())
+                    .Returns(new StoredImageInfo
+                    {
+                        Location = new Uri("http://localhost/", UriKind.Absolute),
+                        ContentType = "image/png",
+                        Height = 900,
+                        Width = 1600,
+                        FileSize = 100_000
+                    });
+
+                imageStore
+                    .When(substituteImageStore => substituteImageStore.Delete(Arg.Any<Uri>()))
+                    .Do(callInfo => { });
+
+                imageStore
+                    .Get(Arg.Any<string>())
+                    .Returns(new MemoryStream());
+
+                imageStore
+                    .GetLocation(Arg.Any<HttpContext>(), Arg.Any<object?>())
+                    .Returns((string?)null);
+
+                return imageStore;
             });
         });
 
