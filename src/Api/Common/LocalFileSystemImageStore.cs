@@ -45,7 +45,6 @@ public sealed class LocalFileSystemImageStore(IOptions<LocalFileSystemImageStore
     /// </returns>
     public async Task<StoredImageInfo> SaveAsync(IFormFile formFile, CancellationToken cancellationToken = default)
     {
-        //formFile.ThrowIfNotImage();
         var image = new MagickImage(formFile.OpenReadStream());
         var baseDirectory = Path.GetFullPath(_options.ImageDirectory);
         var fileName = $"{Guid.NewGuid()}.{image.Format}";
